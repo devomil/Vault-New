@@ -1,0 +1,1025 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FileZilla3 version="3.51.0" platform="windows">
+	<Servers>
+		<Server>
+			<Host>buyvpc-com.3dcartstores.com</Host>
+			<Port>990</Port>
+			<Protocol>3</Protocol>
+			<Type>0</Type>
+			<User>tekenvy.com|tekbzkiz</User>
+			<Pass encoding="base64">QHQzeWV2bXk1OFQzaw==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>3dCart</Name>
+			<Comments>@t3yevmy58T3k</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>tekenvy-com.3dcartstores.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>tekenvy.com|tekbzkiz</User>
+			<Pass encoding="base64">QHQzeWV2bXk1OFQzaw==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>3dCart Product Import</Name>
+			<Comments>@t3yevmy58T3k</Comments>
+			<RemoteDir>1 0 3 web 6 assets 7 imports</RemoteDir>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>ftp.channeladvisor.com</Host>
+			<Port>21</Port>
+			<Protocol>6</Protocol>
+			<Type>0</Type>
+			<User>VpcInv:akoldeway@vpcinnovations.com</User>
+			<Pass encoding="base64">YXZvY2Fkb3JvY2tzMQ==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>ChannelAdvisor</Name>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>vaultproc.vpcinnovations.com</Host>
+			<Port>21</Port>
+			<Protocol>6</Protocol>
+			<Type>0</Type>
+			<User>flxpoint</User>
+			<Pass encoding="base64">ODJWSGBFeHl7aHFVailqKw==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Connect As Flxpoint</Name>
+			<Comments>Connect to vault proc on prot 21 Flxpoint incoming folder as flxpoint user</Comments>
+			<RemoteDir>1 0 8 Incoming</RemoteDir>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>buyvpc.com</Host>
+			<Port>990</Port>
+			<Protocol>3</Protocol>
+			<Type>0</Type>
+			<User>buyvpc.com|537115tekbzk</User>
+			<Pass encoding="base64">QE5AdDN5ZXZteTU4</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Copy of 3dCart</Name>
+			<Comments>@N@t3yevmy58</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>mft.essendant.com</Host>
+			<Port>22</Port>
+			<Protocol>1</Protocol>
+			<Type>0</Type>
+			<User>FUZEDAT2</User>
+			<Pass encoding="base64">TU5FMzJFV1M=</Pass>
+			<Logontype>1</Logontype>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Essendant Order FTP</Name>
+			<Comments>MNE32EWS</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>files.etailsolutions.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>vantagepoint-ingramca_ftp</User>
+			<Pass encoding="base64">U3Rhc1dhMmVqYUMm</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Etail</Name>
+			<Comments>StasWa2ejaC&amp;</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>files.etailsolutions.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>vp.akoldeway</User>
+			<Pass encoding="base64">SzBsZGV3YXkyIQ==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Etail - All Files</Name>
+			<Comments>K0ldeway2!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Folder expanded="0">Feeds<Server>
+				<Host>tekenvy-com.3dcartstores.com</Host>
+				<Port>990</Port>
+				<Protocol>3</Protocol>
+				<Type>0</Type>
+				<User>tekenvy.com|tekbzkiz</User>
+				<Pass encoding="base64">QHQzeWV2bXk1OFQzaw==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>3dCart</Name>
+				<Comments>@t3yevmy58T3k</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.acdd.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>VantagePoint</User>
+				<Pass encoding="base64">VmFudGFnZVBvaW50MQ==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>AcdDistribution</Name>
+				<Comments>VantagePoint1</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.arbitech.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>VAN15</User>
+				<Pass encoding="base64">OTdBREE3NTJBOTVCRTkxRA==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Arbitech</Name>
+				<Comments>97ADA752A95BE91D
+
+Old: C2371CB966C60DC1
+</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.arbitech.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>VAN15</User>
+				<Pass encoding="base64">RjA2RDY5RkFGQjVEQzVB</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Arbitech New</Name>
+				<Comments>F06D69FAFB5DC5A</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>4.79.60.130</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>91067</User>
+				<Pass encoding="base64">Z29vZGxpZmU=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>ASI</Name>
+				<Comments>goodlife</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.avnet.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>VPC</User>
+				<Pass encoding="base64">M0FhUHA1SkY=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Avnet</Name>
+				<Comments>3AaPp5JF</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>216.68.72.78</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>customer</User>
+				<Pass encoding="base64">d2VsY29tZQ==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>BlueStar General</Name>
+				<Comments>welcome</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>216.68.72.78</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>VPFD34980</User>
+				<Pass encoding="base64">MTZ2UDA0ZnVaRWRAdEAyNiMjIQ==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>BlueStar Orders</Name>
+				<Comments>16vP04fuZEd@t@26##!</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>pricefiles.cdw.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>fuzedata</User>
+				<Logontype>2</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>CDW</Name>
+				<Comments>Password: cuMANas4</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.dandh.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>2722360000</User>
+				<Pass encoding="base64">eUJZM3BOYXQ=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>D&amp;H</Name>
+				<Comments>yBY3pNat</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>comm.datatrans-inc.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>dts3958</User>
+				<Pass encoding="base64">MlRmRGdnSGozMjVHODVHZDE5MA==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>DataTrans</Name>
+				<Comments>2TfDggHj325G85Gd190</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.netdci.net</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>vantage</User>
+				<Pass encoding="base64">VjE4QGRjaQ==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>DCI</Name>
+				<Comments>V18@dci</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>64.29.145.9</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>531421.ftpsite.dstewart.com</User>
+				<Pass encoding="base64">Mm5aKCloNDVqMm9RcA==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>DouglasStewart</Name>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>mft.essendant.com</Host>
+				<Port>22</Port>
+				<Protocol>1</Protocol>
+				<Type>0</Type>
+				<User>fuzedat2</User>
+				<Pass encoding="base64">bW5lMzJld3M=</Pass>
+				<Logontype>1</Logontype>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Essendant Orders</Name>
+				<Comments>MNE32EWS
+
+mne32ews
+
+</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.etilize.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>vantageptcsv</User>
+				<Pass encoding="base64">VkBudEBnM3B0</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Etilize</Name>
+				<Comments>V@nt@g3pt</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.etilize.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>mfgread</User>
+				<Logontype>2</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Etilize Mfg Name</Name>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftpsecure.ingrammicro.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>519387</User>
+				<Pass encoding="base64">VDQ5aDI3</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>IngramMicro Avail</Name>
+				<Comments>T49h27</Comments>
+				<RemoteDir>1 0 6 FUSION 2 US 5 AVAIL</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftpsecure.ingrammicro.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>519387</User>
+				<Pass encoding="base64">VDQ5aDI3</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>IngramMicro Price</Name>
+				<Comments>T49h27
+
+old: ftpsecure.ingrammicro.com</Comments>
+				<LocalDir>/FUSION/US/LUO182</LocalDir>
+				<RemoteDir>1 0 6 FUSION 2 US 6 LUO182</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>partnerreports.ingrammicro.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>517UY3</User>
+				<Pass encoding="base64">YVI0Z0J3</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>IngramMicro Price new</Name>
+				<Comments>aR4gBw
+
+old: ftpsecure.ingrammicro.com</Comments>
+				<LocalDir>/FUSION/US/W27R8N</LocalDir>
+				<RemoteDir>1 0 6 FUSION 2 US 6 W27R8N</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>order.ekeystone.com</Host>
+				<Port>990</Port>
+				<Protocol>3</Protocol>
+				<Type>0</Type>
+				<User>S122274</User>
+				<Pass encoding="base64">dmlpMjJjc2M=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_PASSIVE</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Keystone</Name>
+				<Comments>vii22csc</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>mktpftp.newegg.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>B2B_V01U</User>
+				<Pass encoding="base64">R29vZGxpZmUxJA==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>NeweggBiz</Name>
+				<Comments>Goodlife1$
+
+old host prior to 10/8/19: ftp08.newegg.com</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>mktpftp.newegg.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>A2F8</User>
+				<Pass encoding="base64">R29vZGxpZmUxJA==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>NeweggConsumer</Name>
+				<Comments>Goodlife1$</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>12.43.195.11</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>Vantage101</User>
+				<Pass encoding="base64">VlBDMTAxRlRQ</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>NewWave</Name>
+				<Comments>VPC101FTP</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.notionsmarketing.com</Host>
+				<Port>22</Port>
+				<Protocol>1</Protocol>
+				<Type>0</Type>
+				<User>vpc</User>
+				<Pass encoding="base64">MzZ3VGd6WCE=</Pass>
+				<Logontype>1</Logontype>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Notions</Name>
+				<Comments>36wTgzX!</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>trade.marketplace.buy.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>sales@gleetech.com</User>
+				<Pass encoding="base64">WGdidEQyTTI=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Rakuten</Name>
+				<Comments>XgbtD2M2
+
+old password until 9/6: NVPC4Rak14</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>catalog.scansource.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>NNDcpLj8d858</User>
+				<Pass encoding="base64">S0xxQVM0Mm5SQnhZ</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>ScanSource</Name>
+				<Comments>KLqAS42nRBxY</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>gis.sprich.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>FTPVPC</User>
+				<Pass encoding="base64">RjYwRTY0</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>SpRichards OrderUpdates</Name>
+				<Comments>F60E64</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>gis.sprich.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>FTPVPC</User>
+				<Pass encoding="base64">RjYwRTY0</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>SpRichards Price</Name>
+				<Comments>F60E64</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>www.rapidretail.net</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>ssi_vpc534</User>
+				<Pass encoding="base64">UmFwaWRfNTM0IQ==</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>SSI</Name>
+				<Comments>Rapid_534!</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.synnex.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>u541990</User>
+				<Pass encoding="base64">ZjZkNXM0</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Synnex Inventory</Name>
+				<Comments>f6d5s4</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.synnex.com</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>u541990</User>
+				<Pass encoding="base64">ZjZkNXM0</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Synnex Price</Name>
+				<Comments>f6d5s4</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.tapww.com</Host>
+				<Port>22</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>tapinv</User>
+				<Pass encoding="base64">VEBwMU5WMDIxMCE=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>TransAmerican Avail</Name>
+				<Comments>T@p1NV0210!</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>207.105.137.89</Host>
+				<Port>22</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>tawecom</User>
+				<Pass encoding="base64">NTE4ZEpaV2s=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>TransAmerican EComm</Name>
+				<Comments>518dJZWk</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.wynit.info</Host>
+				<Port>21</Port>
+				<Protocol>0</Protocol>
+				<Type>0</Type>
+				<User>vpc7392</User>
+				<Pass encoding="base64">bWg5azVh</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Wynit</Name>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+		</Folder>
+		<Folder expanded="0">Feeds Canada<Server>
+				<Host>partnerreports.ingrammicro.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>428821</User>
+				<Pass encoding="base64">WTg1aEpL</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Ingram Canada</Name>
+				<Comments>Pwd: Y85hJK
+
+Auto-connects to remote directory: \FUSION\CA\4HU48E</Comments>
+				<RemoteDir>8 0 6 FUSION 2 CA 6 4HU48E</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>partnerreports.ingrammicro.com</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>428821</User>
+				<Pass encoding="base64">WTg1aEpL</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Ingram Canada Inventory</Name>
+				<Comments>Pwd: Y85hJK
+
+Auto-connects to remote directory: \FUSION\CA\Avail</Comments>
+				<RemoteDir>8 0 6 FUSION 2 CA 5 Avail</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.synnex.ca</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>c1210983</User>
+				<Pass encoding="base64">N3k2dDRyM3c=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Synnex Canada</Name>
+				<Comments>Sd3rgY78
+
+Price Avail File Name: c1210983.zip</Comments>
+				<RemoteDir>1 0 5 stock</RemoteDir>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+			<Server>
+				<Host>ftp.synnex.ca</Host>
+				<Port>21</Port>
+				<Protocol>6</Protocol>
+				<Type>0</Type>
+				<User>c1210983</User>
+				<Pass encoding="base64">N3k2dDRyM3c=</Pass>
+				<Logontype>1</Logontype>
+				<PasvMode>MODE_DEFAULT</PasvMode>
+				<EncodingType>Auto</EncodingType>
+				<BypassProxy>0</BypassProxy>
+				<Name>Synnex Canada Inventory</Name>
+				<Comments>7y6t4r3w
+
+Sd3rgY78
+
+Price Avail File Name: c1210983.zip</Comments>
+				<SyncBrowsing>0</SyncBrowsing>
+				<DirectoryComparison>0</DirectoryComparison>
+			</Server>
+		</Folder>
+		<Server>
+			<Host>54.173.97.206</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>BUYVPC</User>
+			<Logontype>2</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Feedvisor</Name>
+			<Comments>Goodlife1!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>sftp.uscco.com</Host>
+			<Port>10022</Port>
+			<Protocol>1</Protocol>
+			<Type>0</Type>
+			<User>FUZEDAT2</User>
+			<Logontype>2</Logontype>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>New site 4</Name>
+			<Comments>Mailbox:  FUZEDAT2
+Password:  MNE32EWS
+</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>vaultproc.vpcinnovations.com</Host>
+			<Port>21</Port>
+			<Protocol>6</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">SzBsZGV3YXkx</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>New Vault Processor</Name>
+			<Comments>Internal IP: 192.168.100.61
+
+External IP: 74.62.84.31
+
+</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>192.168.100.63</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Logontype>2</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>New Vault Web Prod</Name>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>vault2.vpcinnovations.com</Host>
+			<Port>21</Port>
+			<Protocol>6</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">ZmRzZWN1cmUxIQ==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>New VaultWeb</Name>
+			<Comments>74.62.84.33
+fdsecure1!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>ftp03.newegg.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>A2F8</User>
+			<Pass encoding="base64">R29vZGxpZmUxJA==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Newegg.com</Name>
+			<Comments>Goodlife1$</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>mktpftp.newegg.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>A2F8</User>
+			<Pass encoding="base64">R29vZGxpZmUxJA==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Newegg.com NEW Ftp</Name>
+			<Comments>Goodlife1$</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>74.62.84.19</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">TmV3dXNlcjEh</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Old VAult Web IP</Name>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>reports.paypal.com</Host>
+			<Port>22</Port>
+			<Protocol>1</Protocol>
+			<Type>0</Type>
+			<User>sftpj9_nickfuzedata.com</User>
+			<Pass encoding="base64">VkBudGFnZVAwaW50</Pass>
+			<Logontype>1</Logontype>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>PayPal</Name>
+			<Comments>V@ntageP0int</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>sql2012.vpcinnovations.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">b2xkTW91c2U2Nw==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Sql2012</Name>
+			<Comments>oldMouse67</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>www.rapidretail.net</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>ssi_vpc534</User>
+			<Pass encoding="base64">UmFwaWRfNTM0IQ==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>SSIOrderStatus</Name>
+			<Comments>Rapid_534!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>ftp2.testfreaks.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>vpcinnovations.com</User>
+			<Pass encoding="base64">UUFRZW5IUHJHMWFUMEUyMkw=</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>TestFreaks</Name>
+			<Comments>Password: QAQenHPrG1aT0E22L</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>66.185.20.30</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">ZmRzZWN1cmUxIQ==</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>VaultGateway</Name>
+			<Comments>fdsecure1!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>ftp.buyvpc.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Logontype>2</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>VPC-FTP-VaultWeb</Name>
+			<Comments>NewUser1!</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>sql.buyvpc.com</Host>
+			<Port>21</Port>
+			<Protocol>0</Protocol>
+			<Type>0</Type>
+			<User>akoldeway</User>
+			<Pass encoding="base64">TmV3dXNlcjEh</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>VPC-SQL</Name>
+			<Comments>Newuser1!</Comments>
+			<RemoteDir>3 0 2 E: 7 SqlData</RemoteDir>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+		<Server>
+			<Host>ftp.wynit.info</Host>
+			<Port>21</Port>
+			<Protocol>6</Protocol>
+			<Type>0</Type>
+			<User>vpc7392</User>
+			<Pass encoding="base64">bWg5azVh</Pass>
+			<Logontype>1</Logontype>
+			<PasvMode>MODE_DEFAULT</PasvMode>
+			<EncodingType>Auto</EncodingType>
+			<BypassProxy>0</BypassProxy>
+			<Name>Wynit</Name>
+			<Comments>mh9k5a</Comments>
+			<SyncBrowsing>0</SyncBrowsing>
+			<DirectoryComparison>0</DirectoryComparison>
+		</Server>
+	</Servers>
+</FileZilla3>
