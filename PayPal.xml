@@ -563,11 +563,6 @@
             SDKVersion instance
             </summary>
         </member>
-        <member name="F:PayPal.Api.OAuthTokenCredential.logger">
-            <summary>
-            Logs output statements, errors, debug info to a text file    
-            </summary>
-        </member>
         <member name="P:PayPal.Api.OAuthTokenCredential.ClientId">
             <summary>
             Gets the client ID to be used when creating an OAuth token.
@@ -604,10 +599,10 @@
             </summary>
         </member>
         <member name="M:PayPal.Api.OAuthTokenCredential.#ctor(System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
+             <summary>
             
-            </summary>
-            <param name="config"></param>
+             </summary>
+             <param name="config"></param>
         </member>
         <member name="M:PayPal.Api.OAuthTokenCredential.#ctor(System.String,System.String)">
             <summary>
@@ -1063,6 +1058,11 @@
         <member name="P:PayPal.Api.Authorization.update_time">
             <summary>
             Time the resource was last updated in UTC ISO8601 format.
+            </summary>
+        </member>
+        <member name="P:PayPal.Api.Authorization.processor_response">
+            <summary>
+            Collection of payment response related fields returned from a payment request.
             </summary>
         </member>
         <member name="P:PayPal.Api.Authorization.pending_reason">
@@ -1780,7 +1780,7 @@
             <param name="patchRequest">PatchRequest</param>
             <returns>CreditCard</returns>
         </member>
-        <member name="M:PayPal.Api.CreditCard.List(PayPal.Api.APIContext,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:PayPal.Api.CreditCard.List(PayPal.Api.APIContext,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
             Retrieves a list of Credit Card resources.
             </summary>
@@ -1794,6 +1794,7 @@
             <param name="merchantId">Merchant identifier to filter the search results in list operations.</param>
             <param name="externalCardId">Externally provided card identifier to filter the search results in list operations.</param>
             <param name="externalCustomerId">Externally provided customer identifier to filter the search results in list operations.</param>
+            <param name="totalRequired">Identifies if total count is required or not. Defaults to true.</param>
             <returns>CreditCardList</returns>
         </member>
         <member name="T:PayPal.Api.CreditCardToken">
@@ -2213,6 +2214,11 @@
             Optional field to pass payment deadline for the invoice. Either term_type or due_date can be passed, but not both.
             </summary>
         </member>
+        <member name="P:PayPal.Api.Invoice.reference">
+            <summary>
+            Reference data, such as PO number, to add to the invoice. Maximum length is 60 characters.
+            </summary>
+        </member>
         <member name="P:PayPal.Api.Invoice.discount">
             <summary>
             Invoice level discount in percent or amount.
@@ -2281,6 +2287,11 @@
         <member name="P:PayPal.Api.Invoice.additional_data">
             <summary>
             Any miscellaneous invoice data. 4000 characters max.
+            </summary>
+        </member>
+        <member name="P:PayPal.Api.Invoice.template_id">
+            <summary>
+            The template ID used for the invoice. Useful for copy functionality.
             </summary>
         </member>
         <member name="P:PayPal.Api.Invoice.payment_details">
@@ -3215,7 +3226,7 @@
         </member>
         <member name="P:PayPal.Api.PayerInfo.shipping_address">
             <summary>
-            Obsolete. Use shipping address present in purchase unit.
+            Shipping address of payer PayPal account.
             </summary>
         </member>
         <member name="T:PayPal.Api.Payment">
@@ -3998,7 +4009,7 @@
         </member>
         <member name="F:PayPal.Api.PayPalResource.logger">
             <summary>
-            Logs output statements, errors, debug info to a text file    
+            Logs output statements, errors, debug info to a text file
             </summary>
         </member>
         <member name="T:PayPal.Api.PayPalResource.HttpMethod">
@@ -5984,7 +5995,7 @@
         </member>
         <member name="F:PayPal.Api.ClientCredentials.clientId">
             <summary>
-            Client ID 
+            Client ID
             </summary>
         </member>
         <member name="F:PayPal.Api.ClientCredentials.clientSecret">
@@ -6774,7 +6785,7 @@
         </member>
         <member name="F:PayPal.PayPalException.logger">
             <summary>
-            Logs output statements, errors, debug info to a text file    
+            Logs output statements, errors, debug info to a text file
             </summary>
         </member>
         <member name="M:PayPal.PayPalException.#ctor">
@@ -7379,7 +7390,7 @@
         <member name="T:PayPal.SDKConfigHandler">
             <summary>
             Custom handler for SDK configuration section as defined in App.Config or Web.Config files
-            </summary>    
+            </summary>
         </member>
         <member name="M:PayPal.SDKConfigHandler.#ctor">
             <summary>

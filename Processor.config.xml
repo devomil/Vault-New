@@ -1,8 +1,9 @@
+
 <!--Internal Settings-->
 <Settings>
   <ServerLocation>VaultProc</ServerLocation>
   <Processor>VpcProcessor</Processor>
-  <ProcessorEmail>VpcProcessor@vpcinnovations.com</ProcessorEmail>
+  <ProcessorEmail>MarketplaceProcessor@vpcinnovations.com</ProcessorEmail>
 
   <!--Sql Internal Smtp Settings-->
   <SmtpHost>192.168.100.210</SmtpHost>
