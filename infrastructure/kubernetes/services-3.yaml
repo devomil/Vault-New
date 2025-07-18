@@ -1,0 +1,272 @@
+# Accounting System Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-accounting-system
+  namespace: vault-platform
+  labels:
+    app: vault-accounting-system
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-accounting-system
+  template:
+    metadata:
+      labels:
+        app: vault-accounting-system
+        component: service
+    spec:
+      containers:
+      - name: accounting-system
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3007
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: ACCOUNTING_SYSTEM_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-accounting-system
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3007
+    targetPort: 3007
+    protocol: TCP
+  selector:
+    app: vault-accounting-system
+  type: ClusterIP
+---
+# Analytics Engine Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-analytics-engine
+  namespace: vault-platform
+  labels:
+    app: vault-analytics-engine
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-analytics-engine
+  template:
+    metadata:
+      labels:
+        app: vault-analytics-engine
+        component: service
+    spec:
+      containers:
+      - name: analytics-engine
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3008
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: ANALYTICS_ENGINE_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3008
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3008
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-analytics-engine
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3008
+    targetPort: 3008
+    protocol: TCP
+  selector:
+    app: vault-analytics-engine
+  type: ClusterIP
+---
+# Tenant Management Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-tenant-management
+  namespace: vault-platform
+  labels:
+    app: vault-tenant-management
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-tenant-management
+  template:
+    metadata:
+      labels:
+        app: vault-tenant-management
+        component: service
+    spec:
+      containers:
+      - name: tenant-management
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3009
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: TENANT_MANAGEMENT_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3009
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3009
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-tenant-management
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3009
+    targetPort: 3009
+    protocol: TCP
+  selector:
+    app: vault-tenant-management
+  type: ClusterIP 

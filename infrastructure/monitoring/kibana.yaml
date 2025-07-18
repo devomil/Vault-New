@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: vault-platform
+  labels:
+    app: kibana
+    component: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+        component: logging
+    spec:
+      containers:
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:8.8.0
+        ports:
+        - containerPort: 5601
+          name: http
+        env:
+        - name: ELASTICSEARCH_HOSTS
+          value: "http://elasticsearch:9200"
+        - name: ELASTICSEARCH_URL
+          value: "http://elasticsearch:9200"
+        - name: KIBANA_INDEX
+          value: ".kibana"
+        - name: SERVER_NAME
+          value: "kibana"
+        - name: SERVER_HOST
+          value: "0.0.0.0"
+        - name: XPACK_SECURITY_ENABLED
+          value: "false"
+        - name: XPACK_MONITORING_ENABLED
+          value: "false"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: vault-platform
+  labels:
+    app: kibana
+    component: logging
+spec:
+  ports:
+  - port: 5601
+    targetPort: 5601
+    protocol: TCP
+    name: http
+  selector:
+    app: kibana
+  type: ClusterIP 

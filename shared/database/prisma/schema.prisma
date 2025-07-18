@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                  String               @id @default(cuid())
+  name                String
+  slug                String               @unique
+  status              String               @default("active")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  configuration       Json?
+  inventory           Inventory[]
+  marketplaceListings MarketplaceListing[]
+  marketplaceOrders   MarketplaceOrder[]
+  marketplaces        Marketplace[]
+  orders              Order[]
+  pricingRules        PricingRule[]
+  products            Product[]
+  users               User[]
+  vendors             Vendor[]
+
+  @@map("tenants")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  email     String
+  firstName String?
+  lastName  String?
+  role      String   @default("user")
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@map("users")
+}
+
+model Product {
+  id          String               @id @default(cuid())
+  tenantId    String
+  sku         String
+  name        String
+  description String?
+  category    String?
+  brand       String?
+  status      String               @default("active")
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  attributes  Json?
+  images      String[]
+  inventory   Inventory?
+  listings    MarketplaceListing[]
+  variants    ProductVariant[]
+  tenant      Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, sku])
+  @@index([tenantId, status])
+  @@map("products")
+}
+
+model ProductVariant {
+  id         String   @id @default(cuid())
+  productId  String
+  sku        String
+  name       String
+  attributes Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, sku])
+  @@map("product_variants")
+}
+
+model Marketplace {
+  id            String               @id @default(cuid())
+  tenantId      String
+  marketplaceId String
+  name          String
+  type          String
+  status        String               @default("active")
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  apiKey        String?
+  apiSecret     String?
+  accessToken   String?
+  refreshToken  String?
+  settings      Json?
+  listings      MarketplaceListing[]
+  orders        MarketplaceOrder[]
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, marketplaceId])
+  @@map("marketplaces")
+}
+
+model MarketplaceListing {
+  id            String      @id @default(cuid())
+  tenantId      String
+  marketplaceId String
+  productId     String
+  externalId    String
+  status        String      @default("active")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  title         String?
+  description   String?
+  price         Decimal?
+  currency      String      @default("USD")
+  quantity      Int         @default(0)
+  attributes    Json?
+  marketplace   Marketplace @relation(fields: [marketplaceId], references: [id], onDelete: Cascade)
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([marketplaceId, externalId])
+  @@index([tenantId, status])
+  @@map("marketplace_listings")
+}
+
+model MarketplaceOrder {
+  id            String      @id @default(cuid())
+  tenantId      String
+  marketplaceId String
+  externalId    String
+  status        String      @default("pending")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  customerEmail String?
+  customerName  String?
+  totalAmount   Decimal?
+  currency      String      @default("USD")
+  items         Json?
+  marketplace   Marketplace @relation(fields: [marketplaceId], references: [id], onDelete: Cascade)
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([marketplaceId, externalId])
+  @@index([tenantId, status])
+  @@map("marketplace_orders")
+}
+
+model Vendor {
+  id        String          @id @default(cuid())
+  tenantId  String
+  vendorId  String
+  name      String
+  type      String
+  status    String          @default("active")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  apiKey    String?
+  apiSecret String?
+  settings  Json?
+  orders    VendorOrder[]
+  products  VendorProduct[]
+  tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, vendorId])
+  @@map("vendors")
+}
+
+model VendorProduct {
+  id          String   @id @default(cuid())
+  vendorId    String
+  sku         String
+  name        String
+  price       Decimal?
+  cost        Decimal?
+  quantity    Int      @default(0)
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String?
+  attributes  Json?
+  vendor      Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, sku])
+  @@map("vendor_products")
+}
+
+model VendorOrder {
+  id          String   @id @default(cuid())
+  vendorId    String
+  orderId     String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  totalAmount Decimal?
+  items       Json?
+  vendor      Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, orderId])
+  @@map("vendor_orders")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  tenantId        String
+  orderNumber     String      @unique
+  status          String      @default("pending")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  customerEmail   String?
+  customerName    String?
+  totalAmount     Decimal?
+  currency        String      @default("USD")
+  shippingAddress Json?
+  billingAddress  Json?
+  items           OrderItem[]
+  tenant          Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String?
+  sku       String
+  name      String
+  quantity  Int
+  price     Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
+
+model PricingRule {
+  id         String   @id @default(cuid())
+  tenantId   String
+  name       String
+  type       String
+  status     String   @default("active")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  conditions Json?
+  actions    Json?
+  priority   Int      @default(0)
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, type, status])
+  @@map("pricing_rules")
+}
+
+model Inventory {
+  id                String   @id @default(cuid())
+  tenantId          String
+  productId         String   @unique
+  quantity          Int      @default(0)
+  reserved          Int      @default(0)
+  available         Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lowStockThreshold Int      @default(10)
+  reorderPoint      Int      @default(5)
+  safetyStock       Int      @default(20)
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, quantity])
+  @@map("inventory")
+}

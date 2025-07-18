@@ -1,0 +1,302 @@
+# Product Intelligence Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-product-intelligence
+  namespace: vault-platform
+  labels:
+    app: vault-product-intelligence
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-product-intelligence
+  template:
+    metadata:
+      labels:
+        app: vault-product-intelligence
+        component: service
+    spec:
+      containers:
+      - name: product-intelligence
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3001
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: PRODUCT_INTELLIGENCE_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-product-intelligence
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3001
+    targetPort: 3001
+    protocol: TCP
+  selector:
+    app: vault-product-intelligence
+  type: ClusterIP
+---
+# Marketplace Integration Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-marketplace-integration
+  namespace: vault-platform
+  labels:
+    app: vault-marketplace-integration
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-marketplace-integration
+  template:
+    metadata:
+      labels:
+        app: vault-marketplace-integration
+        component: service
+    spec:
+      containers:
+      - name: marketplace-integration
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3002
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: MARKETPLACE_INTEGRATION_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        - name: AMAZON_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: AMAZON_API_KEY
+        - name: WALMART_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: WALMART_API_KEY
+        - name: EBAY_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: EBAY_API_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3002
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3002
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-marketplace-integration
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3002
+    targetPort: 3002
+    protocol: TCP
+  selector:
+    app: vault-marketplace-integration
+  type: ClusterIP
+---
+# Vendor Integration Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-vendor-integration
+  namespace: vault-platform
+  labels:
+    app: vault-vendor-integration
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-vendor-integration
+  template:
+    metadata:
+      labels:
+        app: vault-vendor-integration
+        component: service
+    spec:
+      containers:
+      - name: vendor-integration
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3003
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: VENDOR_INTEGRATION_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        - name: INGRAM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: INGRAM_API_KEY
+        - name: TD_SYNNEX_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: TD_SYNNEX_API_KEY
+        - name: DH_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: DH_API_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3003
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3003
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-vendor-integration
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3003
+    targetPort: 3003
+    protocol: TCP
+  selector:
+    app: vault-vendor-integration
+  type: ClusterIP 

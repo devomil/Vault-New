@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-platform-config
+  namespace: vault-platform
+data:
+  # Database Configuration
+  DATABASE_URL: "postgresql://vault:vaultpass@vault-postgresql:5432/vault?schema=vault"
+  
+  # Redis Configuration
+  REDIS_URL: "redis://:redispass@vault-redis:6379"
+  
+  # JWT Configuration
+  JWT_SECRET: "your-super-secret-jwt-key-change-in-production"
+  JWT_EXPIRES_IN: "24h"
+  
+  # Tenant Configuration
+  TENANT_HEADER: "x-tenant-id"
+  
+  # Service Configuration
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  
+  # API Gateway Configuration
+  API_GATEWAY_PORT: "3000"
+  API_GATEWAY_HOST: "0.0.0.0"
+  
+  # Service Ports
+  PRODUCT_INTELLIGENCE_PORT: "3001"
+  MARKETPLACE_INTEGRATION_PORT: "3002"
+  VENDOR_INTEGRATION_PORT: "3003"
+  ORDER_PROCESSING_PORT: "3004"
+  PRICING_ENGINE_PORT: "3005"
+  INVENTORY_MANAGEMENT_PORT: "3006"
+  ACCOUNTING_SYSTEM_PORT: "3007"
+  ANALYTICS_ENGINE_PORT: "3008"
+  TENANT_MANAGEMENT_PORT: "3009"
+  NOTIFICATION_SERVICE_PORT: "3010"
+  PERFORMANCE_OPTIMIZATION_PORT: "3011"
+  SECURITY_COMPLIANCE_PORT: "3012"
+  
+  # CORS Configuration
+  CORS_ORIGIN: "https://vault-platform.com"
+  CORS_CREDENTIALS: "true"
+  
+  # Rate Limiting
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  
+  # Health Check Configuration
+  HEALTH_CHECK_INTERVAL: "30s"
+  HEALTH_CHECK_TIMEOUT: "10s"
+  
+  # Monitoring Configuration
+  METRICS_PORT: "9090"
+  METRICS_PATH: "/metrics"
+  
+  # Logging Configuration
+  LOG_FORMAT: "json"
+  LOG_OUTPUT: "stdout" 

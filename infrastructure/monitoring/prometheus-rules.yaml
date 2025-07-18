@@ -1,0 +1,279 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: vault-platform
+data:
+  vault-platform-rules.yml: |
+    groups:
+    - name: vault-platform
+      rules:
+      # High CPU Usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% for more than 5 minutes"
+
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 85% for more than 5 minutes"
+
+      # Disk Space
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}"
+          description: "Disk usage is above 85% for more than 5 minutes"
+
+      # Pod Restarts
+      - alert: PodRestarting
+        expr: increase(kube_pod_container_status_restarts_total[15m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pod {{ $labels.pod }} is restarting"
+          description: "Pod {{ $labels.pod }} has restarted {{ $value }} times in the last 15 minutes"
+
+      # Service Down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} has been down for more than 1 minute"
+
+      # High Response Time
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time for {{ $labels.job }}"
+          description: "95th percentile response time is above 2 seconds"
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate for {{ $labels.job }}"
+          description: "Error rate is above 5% for more than 5 minutes"
+
+      # Database Connection Issues
+      - alert: DatabaseConnectionIssues
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database connection issues"
+          description: "Cannot connect to PostgreSQL database"
+
+      # Redis Connection Issues
+      - alert: RedisConnectionIssues
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis connection issues"
+          description: "Cannot connect to Redis cache"
+
+      # API Gateway High Load
+      - alert: APIGatewayHighLoad
+        expr: sum(rate(http_requests_total{job="vault-api-gateway"}[5m])) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API Gateway high load"
+          description: "API Gateway is receiving more than 1000 requests per second"
+
+      # Order Processing Queue
+      - alert: OrderProcessingQueue
+        expr: vault_order_queue_size > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Order processing queue is backing up"
+          description: "Order processing queue has more than 100 pending orders"
+
+      # Tenant Limit Reached
+      - alert: TenantLimitReached
+        expr: vault_active_tenants / vault_max_tenants > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tenant limit nearly reached"
+          description: "Active tenants are at 90% of maximum capacity"
+
+      # Security Compliance Issues
+      - alert: SecurityComplianceIssues
+        expr: vault_security_violations_total > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Security compliance violations detected"
+          description: "Security violations have been detected in the system"
+
+      # Performance Degradation
+      - alert: PerformanceDegradation
+        expr: vault_service_response_time_seconds > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Service performance degradation"
+          description: "Service response time is above 5 seconds"
+
+      # Memory Leak Detection
+      - alert: MemoryLeak
+        expr: increase(process_resident_memory_bytes[1h]) > 1000000000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Potential memory leak detected"
+          description: "Memory usage has increased by more than 1GB in the last hour"
+
+      # Certificate Expiry
+      - alert: CertificateExpiry
+        expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 30
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate will expire in less than 30 days"
+
+      # Backup Failure
+      - alert: BackupFailure
+        expr: vault_backup_last_success_timestamp < time() - 86400
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backup failure detected"
+          description: "No successful backup in the last 24 hours"
+
+      # High Database Connections
+      - alert: HighDatabaseConnections
+        expr: pg_stat_database_numbackends > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connections"
+          description: "Database has more than 80 active connections"
+
+      # Slow Database Queries
+      - alert: SlowDatabaseQueries
+        expr: pg_stat_activity_max_tx_duration > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Database queries taking longer than 5 minutes"
+
+      # Redis Memory Usage
+      - alert: RedisMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is above 80%"
+
+      # Notification Service Failures
+      - alert: NotificationServiceFailures
+        expr: rate(vault_notification_failures_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Notification service failures"
+          description: "Notification service is experiencing failures"
+
+      # Marketplace Integration Issues
+      - alert: MarketplaceIntegrationIssues
+        expr: vault_marketplace_api_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Marketplace integration issues"
+          description: "Marketplace API integration is experiencing errors"
+
+      # Vendor Integration Issues
+      - alert: VendorIntegrationIssues
+        expr: vault_vendor_api_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Vendor integration issues"
+          description: "Vendor API integration is experiencing errors"
+
+      # Analytics Data Processing Issues
+      - alert: AnalyticsProcessingIssues
+        expr: vault_analytics_processing_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Analytics processing issues"
+          description: "Analytics data processing is experiencing errors"
+
+      # Pricing Engine Issues
+      - alert: PricingEngineIssues
+        expr: vault_pricing_calculation_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pricing engine issues"
+          description: "Pricing engine is experiencing calculation errors"
+
+      # Inventory Sync Issues
+      - alert: InventorySyncIssues
+        expr: vault_inventory_sync_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Inventory sync issues"
+          description: "Inventory synchronization is experiencing errors"
+
+      # Accounting System Issues
+      - alert: AccountingSystemIssues
+        expr: vault_accounting_transaction_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Accounting system issues"
+          description: "Accounting system is experiencing transaction errors" 

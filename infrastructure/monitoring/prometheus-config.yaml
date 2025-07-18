@@ -1,0 +1,280 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: vault-platform
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: vault-platform
+        environment: production
+
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+      # Prometheus itself
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
+      # Kubernetes API Server
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+          - role: endpoints
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: default;kubernetes;https
+
+      # Kubernetes Nodes
+      - job_name: 'kubernetes-nodes'
+        kubernetes_sd_configs:
+          - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+
+      # Kubernetes Pods
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+
+      # Vault Platform Services
+      - job_name: 'vault-api-gateway'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-api-gateway
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-product-intelligence'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-product-intelligence
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-marketplace-integration'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-marketplace-integration
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-vendor-integration'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-vendor-integration
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-order-processing'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-order-processing
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-pricing-engine'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-pricing-engine
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-inventory-management'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-inventory-management
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-accounting-system'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-accounting-system
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-analytics-engine'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-analytics-engine
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-tenant-management'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-tenant-management
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-notification-service'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-notification-service
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-performance-optimization'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-performance-optimization
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      - job_name: 'vault-security-compliance'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: vault-security-compliance
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: metrics
+        metrics_path: /metrics
+        scrape_interval: 15s
+
+      # Database Monitoring
+      - job_name: 'postgresql'
+        static_configs:
+          - targets: ['vault-postgresql:5432']
+        metrics_path: /metrics
+        scrape_interval: 30s
+
+      # Redis Monitoring
+      - job_name: 'redis'
+        static_configs:
+          - targets: ['vault-redis:6379']
+        metrics_path: /metrics
+        scrape_interval: 30s
+
+      # Node Exporter
+      - job_name: 'node-exporter'
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+        metrics_path: /metrics
+        scrape_interval: 30s
+
+      # Kube State Metrics
+      - job_name: 'kube-state-metrics'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: kube-state-metrics
+        metrics_path: /metrics
+        scrape_interval: 30s 

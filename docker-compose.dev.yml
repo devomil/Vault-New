@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  # Database
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: vault
+      POSTGRES_PASSWORD: vaultpass
+      POSTGRES_DB: vault
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - '5433:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./infrastructure/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault -d vault"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and message queues
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass redispass
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Development Tools
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    networks:
+      - vault-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:redispass
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
+    networks:
+      - vault-network
+
+volumes:
+  db_data:
+  redis_data:
+
+networks:
+  vault-network:
+    driver: bridge 

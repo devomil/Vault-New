@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-frontend
+  namespace: vault-platform
+  labels:
+    app: vault-frontend
+    component: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vault-frontend
+  template:
+    metadata:
+      labels:
+        app: vault-frontend
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: vault-frontend:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: REACT_APP_API_URL
+          value: "https://api.vault-platform.com"
+        - name: REACT_APP_APP_NAME
+          value: "Vault Platform"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-frontend
+  namespace: vault-platform
+  labels:
+    app: vault-frontend
+    component: frontend
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: vault-frontend
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: vault-frontend-hpa
+  namespace: vault-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vault-frontend
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80 

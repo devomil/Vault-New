@@ -1,0 +1,272 @@
+# Order Processing Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-order-processing
+  namespace: vault-platform
+  labels:
+    app: vault-order-processing
+    component: service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vault-order-processing
+  template:
+    metadata:
+      labels:
+        app: vault-order-processing
+        component: service
+    spec:
+      containers:
+      - name: order-processing
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3004
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: ORDER_PROCESSING_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3004
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3004
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-order-processing
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3004
+    targetPort: 3004
+    protocol: TCP
+  selector:
+    app: vault-order-processing
+  type: ClusterIP
+---
+# Pricing Engine Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-pricing-engine
+  namespace: vault-platform
+  labels:
+    app: vault-pricing-engine
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-pricing-engine
+  template:
+    metadata:
+      labels:
+        app: vault-pricing-engine
+        component: service
+    spec:
+      containers:
+      - name: pricing-engine
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3005
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: PRICING_ENGINE_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3005
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3005
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-pricing-engine
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3005
+    targetPort: 3005
+    protocol: TCP
+  selector:
+    app: vault-pricing-engine
+  type: ClusterIP
+---
+# Inventory Management Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-inventory-management
+  namespace: vault-platform
+  labels:
+    app: vault-inventory-management
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vault-inventory-management
+  template:
+    metadata:
+      labels:
+        app: vault-inventory-management
+        component: service
+    spec:
+      containers:
+      - name: inventory-management
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3006
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: INVENTORY_MANAGEMENT_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "125m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3006
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3006
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-inventory-management
+  namespace: vault-platform
+spec:
+  ports:
+  - port: 3006
+    targetPort: 3006
+    protocol: TCP
+  selector:
+    app: vault-inventory-management
+  type: ClusterIP 

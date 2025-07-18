@@ -1,0 +1,370 @@
+version: '3.9'
+
+services:
+  # Database
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: vault
+      POSTGRES_PASSWORD: vaultpass
+      POSTGRES_DB: vault
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - '5433:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./infrastructure/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault -d vault"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and message queues
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass redispass
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      TENANT_HEADER: x-tenant-id
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Product Intelligence Service
+  product-intelligence:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Marketplace Integration Service
+  marketplace-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Vendor Integration Service
+  vendor-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Order Processing Service
+  order-processing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Pricing Engine Service
+  pricing-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Inventory Management Service
+  inventory-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Accounting System Service
+  accounting-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3007
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Analytics Engine Service
+  analytics-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3008
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Tenant Management Service
+  tenant-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3009
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Notification Service
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3010
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Performance Optimization Service
+  performance-optimization:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3011
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Security & Compliance Service
+  security-compliance:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+      PORT: 3012
+      DATABASE_URL: postgres://vault:vaultpass@db:5432/vault
+      REDIS_URL: redis://:redispass@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - vault-network
+
+  # Development Tools
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    networks:
+      - vault-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:redispass
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
+    networks:
+      - vault-network
+
+volumes:
+  db_data:
+  redis_data:
+
+networks:
+  vault-network:
+    driver: bridge 

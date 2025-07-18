@@ -1,0 +1,339 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: vault-platform
+  labels:
+    app: grafana
+    component: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+        component: monitoring
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.0.0
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: GRAFANA_PASSWORD
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: "false"
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel,grafana-worldmap-panel"
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: grafana-dashboards
+          mountPath: /etc/grafana/provisioning/dashboards
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+      - name: grafana-dashboards
+        configMap:
+          name: grafana-dashboards
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: vault-platform
+  labels:
+    app: grafana
+    component: monitoring
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: http
+  selector:
+    app: grafana
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: vault-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: vault-platform
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus:9090
+      access: proxy
+      isDefault: true
+      editable: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: vault-platform
+data:
+  dashboard-provider.yaml: |
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /etc/grafana/provisioning/dashboards
+
+  vault-platform-overview.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Vault Platform Overview",
+        "tags": ["vault", "overview"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Service Health Overview",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up",
+                "legendFormat": "{{job}}"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "green", "value": 1}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 2,
+            "title": "Request Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (job)",
+                "legendFormat": "{{job}}"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Response Time (95th percentile)",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job))",
+                "legendFormat": "{{job}}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Error Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job)",
+                "legendFormat": "{{job}}"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+  infrastructure-monitoring.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Infrastructure Monitoring",
+        "tags": ["infrastructure", "kubernetes"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "CPU Usage by Node",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+                "legendFormat": "{{instance}}"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Memory Usage by Node",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+                "legendFormat": "{{instance}}"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Disk Usage by Node",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "(node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100",
+                "legendFormat": "{{instance}}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Pod Restarts",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "increase(kube_pod_container_status_restarts_total[15m])",
+                "legendFormat": "{{pod}}"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+  business-metrics.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Business Metrics",
+        "tags": ["business", "kpis"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Active Tenants",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "vault_active_tenants",
+                "legendFormat": "Active Tenants"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Orders Processed",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(vault_orders_processed_total[5m])) by (tenant_id)",
+                "legendFormat": "{{tenant_id}}"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Revenue Generated",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(vault_revenue_total[5m])) by (tenant_id)",
+                "legendFormat": "{{tenant_id}}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "API Usage by Tenant",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (tenant_id)",
+                "legendFormat": "{{tenant_id}}"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-24h",
+          "to": "now"
+        },
+        "refresh": "1m"
+      }
+    } 

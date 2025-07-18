@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-api-gateway
+  namespace: vault-platform
+  labels:
+    app: vault-api-gateway
+    component: gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vault-api-gateway
+  template:
+    metadata:
+      labels:
+        app: vault-api-gateway
+        component: gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: vault-modernization:latest
+        ports:
+        - containerPort: 3000
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: API_GATEWAY_PORT
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: API_GATEWAY_HOST
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: REDIS_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: JWT_SECRET
+        - name: TENANT_HEADER
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: TENANT_HEADER
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: LOG_LEVEL
+        - name: METRICS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: METRICS_PORT
+        - name: METRICS_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: vault-platform-config
+              key: METRICS_PATH
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: vault-logs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-api-gateway
+  namespace: vault-platform
+  labels:
+    app: vault-api-gateway
+    component: gateway
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 3000
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: vault-api-gateway
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: vault-api-gateway-hpa
+  namespace: vault-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vault-api-gateway
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80 

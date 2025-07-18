@@ -1,0 +1,10 @@
+{
+  "name": "@vault/shared-utils",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo 'No tests for shared-utils'"
+  }
+} 

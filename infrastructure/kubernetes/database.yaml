@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-postgresql
+  namespace: vault-platform
+  labels:
+    app: vault-postgresql
+    component: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-postgresql
+  template:
+    metadata:
+      labels:
+        app: vault-postgresql
+        component: database
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: vault-platform-secrets
+              key: POSTGRES_DB
+        - name: POSTGRES_INITDB_ARGS
+          value: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - vault
+            - -d
+            - vault
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - vault
+            - -d
+            - vault
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: vault-postgresql-pvc
+      - name: init-scripts
+        configMap:
+          name: vault-db-init-scripts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-postgresql
+  namespace: vault-platform
+  labels:
+    app: vault-postgresql
+    component: database
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: vault-postgresql
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-db-init-scripts
+  namespace: vault-platform
+data:
+  init.sql: |
+    -- Create vault schema
+    CREATE SCHEMA IF NOT EXISTS vault;
+    
+    -- Set search path
+    SET search_path TO vault, public;
+    
+    -- Create extensions
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+    
+    -- Grant permissions
+    GRANT ALL PRIVILEGES ON SCHEMA vault TO vault;
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vault TO vault;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA vault TO vault; 
