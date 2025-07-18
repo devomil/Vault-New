@@ -272,3 +272,14 @@ const data = await prisma.table.findMany({
   where: { tenantId: req.tenantContext.tenantId }
 });
 ``` 
+
+## Monitoring & Alerting (Phase 4)
+
+The production environment now includes:
+- **Prometheus**: Metrics collection for all services and infrastructure
+- **Grafana**: Dashboards for real-time monitoring and business KPIs
+- **AlertManager**: Automated alerting and escalation
+- **ELK Stack (Elasticsearch, Logstash, Kibana)**: Centralized logging and log analysis
+- **Distributed Tracing**: End-to-end request tracing across microservices
+
+All database and service metrics are monitored in production, with alerting and dashboards available for operational and business intelligence. 

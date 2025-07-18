@@ -7,6 +7,9 @@ export * from './product';
 // Marketplace types
 export * from './marketplace';
 
+// Amazon API types
+export * from './amazon-api';
+
 // Vendor types
 export * from './vendor';
 

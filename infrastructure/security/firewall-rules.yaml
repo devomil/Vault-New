@@ -1,0 +1,152 @@
+# Firewall Rules and Security Groups Configuration
+# For low-cost, self-hosted deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firewall-config
+  namespace: vault-production
+data:
+  # Allowed external IP ranges (restrict to your office/home IP)
+  allowed-ips: |
+    127.0.0.1/32
+    10.0.0.0/8
+    172.16.0.0/12
+    192.168.0.0/16
+    # Add your specific IP ranges here
+  
+  # Allowed ports for external access
+  allowed-ports: |
+    80   # HTTP (redirect to HTTPS)
+    443  # HTTPS
+    22   # SSH (restrict to specific IPs)
+  
+  # Internal service ports (not exposed externally)
+  internal-ports: |
+    3000  # API Gateway
+    3001  # Product Intelligence
+    3002  # Marketplace Integration
+    3003  # Vendor Integration
+    3004  # Order Processing
+    3005  # Pricing Engine
+    3006  # Inventory Management
+    3007  # Accounting System
+    3008  # Analytics Engine
+    3009  # Tenant Management
+    3010  # Notification Service
+    3011  # Performance Optimization
+    3012  # Security & Compliance
+    5432  # PostgreSQL
+    6379  # Redis
+    9090  # Prometheus
+    3000  # Grafana
+    5601  # Kibana
+    9200  # Elasticsearch
+
+---
+# Security Headers Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-headers
+  namespace: vault-production
+data:
+  # Security headers to be applied by ingress/nginx
+  headers: |
+    # Prevent clickjacking
+    X-Frame-Options: DENY
+    
+    # Prevent MIME type sniffing
+    X-Content-Type-Options: nosniff
+    
+    # Enable XSS protection
+    X-XSS-Protection: 1; mode=block
+    
+    # Strict transport security (HTTPS only)
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    
+    # Content Security Policy
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';
+    
+    # Referrer Policy
+    Referrer-Policy: strict-origin-when-cross-origin
+    
+    # Permissions Policy
+    Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+---
+# Rate Limiting Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rate-limiting
+  namespace: vault-production
+data:
+  # Rate limiting rules per tenant and endpoint
+  rules: |
+    # API Gateway rate limits
+    api-gateway:
+      general: 1000/minute
+      auth: 10/minute
+      tenant: 500/minute
+    
+    # Service-specific rate limits
+    product-intelligence:
+      general: 200/minute
+      analysis: 50/minute
+    
+    marketplace-integration:
+      general: 100/minute
+      sync: 10/minute
+    
+    vendor-integration:
+      general: 100/minute
+      sync: 10/minute
+    
+    order-processing:
+      general: 300/minute
+      create: 50/minute
+    
+    pricing-engine:
+      general: 200/minute
+      calculate: 100/minute
+    
+    # Database rate limits
+    database:
+      queries: 1000/minute
+      writes: 100/minute
+
+---
+# CORS Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cors-config
+  namespace: vault-production
+data:
+  # CORS settings for API Gateway
+  cors: |
+    allowed-origins:
+      - https://your-domain.com
+      - https://admin.your-domain.com
+      - http://localhost:3000  # Development only
+    
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    
+    allowed-headers:
+      - Content-Type
+      - Authorization
+      - x-tenant-id
+      - x-api-key
+    
+    exposed-headers:
+      - x-tenant-id
+      - x-request-id
+    
+    max-age: 86400
+    credentials: true 

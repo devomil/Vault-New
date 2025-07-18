@@ -1,0 +1,207 @@
+# DDoS Protection and Intrusion Detection Configuration
+# Using open-source, low-cost solutions
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddos-protection
+  namespace: vault-production
+data:
+  # Fail2ban configuration for basic intrusion detection
+  fail2ban.conf: |
+    [DEFAULT]
+    # Ban time in seconds (24 hours)
+    bantime = 86400
+    # Find time in seconds (10 minutes)
+    findtime = 600
+    # Max retries before ban
+    maxretry = 5
+    # Ban action
+    banaction = iptables-allports
+    # Log level
+    loglevel = INFO
+    
+    # API Gateway protection
+    [api-gateway]
+    enabled = true
+    port = 3000
+    filter = api-gateway
+    logpath = /var/log/api-gateway/access.log
+    maxretry = 10
+    
+    # Authentication protection
+    [auth-attempts]
+    enabled = true
+    port = 3000
+    filter = auth-failures
+    logpath = /var/log/api-gateway/auth.log
+    maxretry = 3
+    
+    # Database protection
+    [database-attacks]
+    enabled = true
+    port = 5432
+    filter = sql-injection
+    logpath = /var/log/postgresql/postgresql.log
+    maxretry = 2
+
+---
+# Rate limiting and DDoS protection rules
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rate-limiting-rules
+  namespace: vault-production
+data:
+  # Nginx rate limiting configuration
+  nginx-rate-limit.conf: |
+    # Rate limiting zones
+    limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+    limit_req_zone $binary_remote_addr zone=auth:10m rate=2r/s;
+    limit_req_zone $binary_remote_addr zone=admin:10m rate=5r/s;
+    
+    # Burst settings
+    limit_req_zone $binary_remote_addr zone=api_burst:10m rate=20r/s;
+    
+    # Connection limiting
+    limit_conn_zone $binary_remote_addr zone=conn_limit:10m;
+    limit_conn conn_limit 10;
+    
+    # DDoS protection headers
+    add_header X-DDoS-Protection "enabled" always;
+    add_header X-Rate-Limit "enabled" always;
+
+---
+# Intrusion Detection Rules
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ids-rules
+  namespace: vault-production
+data:
+  # Basic intrusion detection patterns
+  patterns: |
+    # SQL Injection patterns
+    sql_injection:
+      - "'; DROP TABLE"
+      - "'; INSERT INTO"
+      - "'; UPDATE"
+      - "'; DELETE FROM"
+      - "UNION SELECT"
+      - "OR 1=1"
+      - "OR '1'='1"
+    
+    # XSS patterns
+    xss_attack:
+      - "<script>"
+      - "javascript:"
+      - "onload="
+      - "onerror="
+      - "onclick="
+    
+    # Path traversal
+    path_traversal:
+      - "../"
+      - "..\\"
+      - "....//"
+      - "....\\\\"
+    
+    # Command injection
+    command_injection:
+      - "; ls"
+      - "; cat"
+      - "; rm"
+      - "| ls"
+      - "| cat"
+      - "| rm"
+    
+    # Authentication bypass
+    auth_bypass:
+      - "admin'--"
+      - "admin'#"
+      - "admin'/*"
+      - "admin' OR '1'='1"
+      - "admin' OR 1=1--"
+
+---
+# Security Monitoring Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-monitoring
+  namespace: vault-production
+data:
+  # Security event logging
+  security-events: |
+    # Events to monitor
+    events:
+      - failed_login
+      - successful_login
+      - password_change
+      - user_creation
+      - user_deletion
+      - permission_change
+      - data_access
+      - data_export
+      - configuration_change
+      - system_restart
+    
+    # Alert thresholds
+    thresholds:
+      failed_logins_per_hour: 10
+      failed_logins_per_day: 50
+      data_exports_per_day: 100
+      configuration_changes_per_day: 20
+    
+    # Log retention
+    retention:
+      security_logs: 90d
+      access_logs: 30d
+      audit_logs: 365d
+
+---
+# Deployment for security monitoring
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-monitor
+  namespace: vault-production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: security-monitor
+  template:
+    metadata:
+      labels:
+        app: security-monitor
+    spec:
+      containers:
+      - name: security-monitor
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          apk add --no-cache fail2ban iptables
+          # Start fail2ban
+          fail2ban-client start
+          # Monitor logs
+          tail -f /var/log/fail2ban.log
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: fail2ban-config
+          mountPath: /etc/fail2ban
+        - name: logs
+          mountPath: /var/log
+      volumes:
+      - name: fail2ban-config
+        configMap:
+          name: ddos-protection
+      - name: logs
+        emptyDir: {} 

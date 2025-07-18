@@ -1,33 +1,32 @@
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast"
-import { useToast } from "@/hooks/use-toast"
+import React, { useEffect, useState } from 'react';
+import { Toast } from './toast';
 
-export function Toaster() {
-  const { toasts } = useToast()
+export interface ToastData {
+  id: string;
+  title?: string;
+  description?: string;
+  variant?: 'default' | 'destructive' | 'success';
+  duration?: number;
+}
 
+interface ToasterProps {
+  toasts: ToastData[];
+  onRemove: (id: string) => void;
+}
+
+export const Toaster: React.FC<ToasterProps> = ({ toasts, onRemove }) => {
   return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  )
-} 
+    <div className="fixed top-4 right-4 z-50 space-y-2">
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          id={toast.id}
+          title={toast.title}
+          description={toast.description}
+          variant={toast.variant}
+          onClose={() => onRemove(toast.id)}
+        />
+      ))}
+    </div>
+  );
+}; 

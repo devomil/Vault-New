@@ -1,0 +1,261 @@
+# Data Security Configuration
+# Encryption at rest and in transit, key management, backup encryption
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: encryption-keys
+  namespace: vault-production
+type: Opaque
+data:
+  # Base64 encoded encryption keys (generate with: openssl rand -base64 32)
+  database-encryption-key: "eXlvdXItZGF0YWJhc2UtZW5jcnlwdGlvbi1rZXktMzItY2hhcnM="
+  redis-encryption-key: "eXlvdXItcmVkaXMtZW5jcnlwdGlvbi1rZXktMzItY2hhcnM="
+  backup-encryption-key: "eXlvdXItYmFja3VwLWVuY3J5cHRpb24ta2V5LTMyLWNoYXJz"
+  jwt-secret: "eXlvdXItanNvbi13ZWItdG9rZW4tc2VjcmV0LTMyLWNoYXJz"
+  api-key-secret: "eXlvdXItYXBpLWtleS1zZWNyZXQtMzItY2hhcnM="
+
+---
+# TLS/SSL Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tls-config
+  namespace: vault-production
+data:
+  # TLS configuration for HTTPS
+  tls.conf: |
+    # TLS 1.3 configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    
+    # HSTS configuration
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 8.8.8.8 8.8.4.4 valid=300s;
+    resolver_timeout 5s;
+
+---
+# Database Encryption Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-encryption
+  namespace: vault-production
+data:
+  # PostgreSQL encryption settings
+  postgresql.conf: |
+    # Enable SSL/TLS
+    ssl = on
+    ssl_cert_file = '/etc/ssl/certs/postgresql.crt'
+    ssl_key_file = '/etc/ssl/private/postgresql.key'
+    ssl_ca_file = '/etc/ssl/certs/ca.crt'
+    
+    # Encryption at rest
+    encryption_algorithm = 'AES256'
+    
+    # Connection encryption
+    ssl_min_protocol_version = 'TLSv1.2'
+    ssl_prefer_server_ciphers = on
+    
+    # Audit logging
+    log_statement = 'all'
+    log_connections = on
+    log_disconnections = on
+    log_duration = on
+    
+    # Row-level security
+    row_security = on
+
+---
+# Redis Encryption Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-encryption
+  namespace: vault-production
+data:
+  # Redis security configuration
+  redis.conf: |
+    # Enable SSL/TLS
+    tls-port 6380
+    tls-cert-file /etc/ssl/certs/redis.crt
+    tls-key-file /etc/ssl/private/redis.key
+    tls-ca-cert-file /etc/ssl/certs/ca.crt
+    
+    # Authentication
+    requirepass ${REDIS_PASSWORD}
+    
+    # Encryption at rest (if supported)
+    # Note: Redis doesn't natively support encryption at rest
+    # Consider using Redis Enterprise or external encryption
+    
+    # Security settings
+    protected-mode yes
+    bind 127.0.0.1 ::1
+    port 6379
+    
+    # Disable dangerous commands
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    rename-command CONFIG ""
+    rename-command SHUTDOWN ""
+    
+    # Memory management
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+
+---
+# Backup Encryption Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-encryption
+  namespace: vault-production
+data:
+  # Backup encryption script
+  backup-encrypt.sh: |
+    #!/bin/bash
+    
+    # Database backup encryption
+    BACKUP_FILE="$1"
+    ENCRYPTED_FILE="$BACKUP_FILE.enc"
+    KEY_FILE="/etc/encryption/backup-key"
+    
+    # Encrypt backup file
+    openssl enc -aes-256-cbc -salt -in "$BACKUP_FILE" -out "$ENCRYPTED_FILE" -pass file:"$KEY_FILE"
+    
+    # Remove unencrypted backup
+    rm "$BACKUP_FILE"
+    
+    echo "Backup encrypted: $ENCRYPTED_FILE"
+  
+  # Backup decryption script
+  backup-decrypt.sh: |
+    #!/bin/bash
+    
+    # Database backup decryption
+    ENCRYPTED_FILE="$1"
+    DECRYPTED_FILE="${ENCRYPTED_FILE%.enc}"
+    KEY_FILE="/etc/encryption/backup-key"
+    
+    # Decrypt backup file
+    openssl enc -aes-256-cbc -d -in "$ENCRYPTED_FILE" -out "$DECRYPTED_FILE" -pass file:"$KEY_FILE"
+    
+    echo "Backup decrypted: $DECRYPTED_FILE"
+
+---
+# Key Rotation Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: key-rotation
+  namespace: vault-production
+data:
+  # Key rotation schedule
+  rotation-schedule: |
+    # Key rotation intervals
+    database-encryption-key: 90d
+    redis-encryption-key: 90d
+    backup-encryption-key: 180d
+    jwt-secret: 30d
+    api-key-secret: 90d
+    
+    # Rotation notification
+    notification-email: admin@your-domain.com
+    notification-webhook: https://your-domain.com/api/v1/security/key-rotation
+  
+  # Key rotation script
+  rotate-keys.sh: |
+    #!/bin/bash
+    
+    # Key rotation script
+    KEY_TYPE="$1"
+    NEW_KEY=$(openssl rand -base64 32)
+    
+    case $KEY_TYPE in
+      "database")
+        # Update database encryption key
+        kubectl patch secret encryption-keys -p "{\"data\":{\"database-encryption-key\":\"$NEW_KEY\"}}"
+        echo "Database encryption key rotated"
+        ;;
+      "redis")
+        # Update Redis encryption key
+        kubectl patch secret encryption-keys -p "{\"data\":{\"redis-encryption-key\":\"$NEW_KEY\"}}"
+        echo "Redis encryption key rotated"
+        ;;
+      "jwt")
+        # Update JWT secret
+        kubectl patch secret encryption-keys -p "{\"data\":{\"jwt-secret\":\"$NEW_KEY\"}}"
+        echo "JWT secret rotated"
+        ;;
+      *)
+        echo "Unknown key type: $KEY_TYPE"
+        exit 1
+        ;;
+    esac
+
+---
+# Data Masking Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-masking
+  namespace: vault-production
+data:
+  # Data masking rules for sensitive data
+  masking-rules: |
+    # Personal data masking
+    personal_data:
+      email: "***@***.***"
+      phone: "***-***-****"
+      ssn: "***-**-****"
+      credit_card: "****-****-****-****"
+    
+    # Business data masking
+    business_data:
+      api_key: "sk_****************"
+      password: "********"
+      secret: "********"
+    
+    # Log masking
+    log_masking:
+      - "password"
+      - "secret"
+      - "api_key"
+      - "token"
+      - "ssn"
+      - "credit_card"
+
+---
+# Data Retention Policy
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-retention
+  namespace: vault-production
+data:
+  # Data retention periods
+  retention-policy: |
+    # Log retention
+    access_logs: 30d
+    error_logs: 90d
+    security_logs: 365d
+    audit_logs: 7y
+    
+    # Business data retention
+    user_data: 7y
+    transaction_data: 7y
+    analytics_data: 3y
+    backup_data: 1y
+    
+    # Compliance retention
+    gdpr_data: 7y
+    pci_data: 7y
+    soc2_data: 7y 

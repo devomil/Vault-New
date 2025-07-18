@@ -3,6 +3,37 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 import { createLogger, format, transports } from 'winston';
+import helmet from 'helmet';
+import cors from 'cors';
+
+// Security configuration
+const SECURITY_CONFIG = {
+  // Rate limiting tiers
+  rateLimits: {
+    strict: { windowMs: 15 * 60 * 1000, max: 10 }, // 10 requests per 15 minutes
+    normal: { windowMs: 15 * 60 * 1000, max: 100 }, // 100 requests per 15 minutes
+    high: { windowMs: 15 * 60 * 1000, max: 1000 }, // 1000 requests per 15 minutes
+  },
+  // Security headers
+  securityHeaders: {
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+    'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';",
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+  },
+  // CORS configuration
+  cors: {
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000', 'https://your-domain.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id', 'x-api-key'],
+    exposedHeaders: ['x-tenant-id', 'x-request-id'],
+    credentials: true,
+    maxAge: 86400,
+  }
+};
 
 // Service routing configuration
 const serviceRoutes = [
@@ -10,61 +41,79 @@ const serviceRoutes = [
     path: '/api/v1/products',
     target: 'http://localhost:3001',
     port: 3001,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 100 }
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
   },
   {
     path: '/api/v1/marketplaces',
     target: 'http://localhost:3002',
     port: 3002,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 50 }
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
   },
   {
     path: '/api/v1/vendors',
     target: 'http://localhost:3003',
     port: 3003,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 50 }
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
   },
   {
     path: '/api/v1/orders',
     target: 'http://localhost:3004',
     port: 3004,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 200 }
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
   },
   {
     path: '/api/v1/pricing',
     target: 'http://localhost:3005',
     port: 3005,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 100 }
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
   },
   {
     path: '/api/v1/inventory',
     target: 'http://localhost:3006',
     port: 3006,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 150 }
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
   },
   {
     path: '/api/v1/accounting',
     target: 'http://localhost:3007',
     port: 3007,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 50 }
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
   },
   {
     path: '/api/v1/analytics',
     target: 'http://localhost:3008',
     port: 3008,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 30 }
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
   },
   {
     path: '/api/v1/tenants',
     target: 'http://localhost:3009',
     port: 3009,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 100 }
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
   },
   {
     path: '/api/v1/auth',
     target: 'http://localhost:3009',
     port: 3009,
-    rateLimit: { windowMs: 15 * 60 * 1000, max: 200 }
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
+  },
+  {
+    path: '/api/v1/notifications',
+    target: 'http://localhost:3010',
+    port: 3010,
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
+  },
+  {
+    path: '/api/v1/performance',
+    target: 'http://localhost:3011',
+    port: 3011,
+    rateLimit: SECURITY_CONFIG.rateLimits.normal
+  },
+  {
+    path: '/api/v1/security',
+    target: 'http://localhost:3012',
+    port: 3012,
+    rateLimit: SECURITY_CONFIG.rateLimits.strict
   }
 ];
 
@@ -95,14 +144,35 @@ export class SimpleApiGateway {
             format.colorize(),
             format.simple()
           )
+        }),
+        new transports.File({ 
+          filename: '/var/log/api-gateway/access.log',
+          level: 'info'
+        }),
+        new transports.File({ 
+          filename: '/var/log/api-gateway/auth.log',
+          level: 'warn'
         })
       ]
     });
   }
 
   private setupMiddleware(): void {
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+    // Security middleware
+    this.app.use(helmet());
+    this.app.use(cors(SECURITY_CONFIG.cors));
+    
+    // Add custom security headers
+    this.app.use(this.securityHeadersMiddleware);
+    
+    // Request logging
+    this.app.use(this.requestLoggingMiddleware);
+    
+    // Input validation
+    this.app.use(this.inputValidationMiddleware);
+    
+    this.app.use(express.json({ limit: '10mb' }));
+    this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
     
     // Global rate limiting
     const globalLimiter = rateLimit({
@@ -111,6 +181,19 @@ export class SimpleApiGateway {
       message: {
         error: 'Too many requests from this IP',
         message: 'Please try again later'
+      },
+      standardHeaders: true,
+      legacyHeaders: false,
+      handler: (req, res) => {
+        this.logger.warn('Rate limit exceeded', {
+          ip: req.ip,
+          path: req.path,
+          userAgent: req.get('User-Agent')
+        });
+        res.status(429).json({
+          error: 'Too many requests',
+          message: 'Rate limit exceeded. Please try again later.'
+        });
       }
     });
     this.app.use('/api/v1', globalLimiter);
@@ -119,10 +202,109 @@ export class SimpleApiGateway {
     this.app.use('/api/v1', this.authMiddleware);
   }
 
+  private securityHeadersMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+    // Add custom security headers
+    Object.entries(SECURITY_CONFIG.securityHeaders).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+    
+    // Add request ID for tracking
+    const requestId = req.headers['x-request-id'] || this.generateRequestId();
+    res.setHeader('x-request-id', requestId);
+    (req as any).requestId = requestId;
+    
+    next();
+  };
+
+  private requestLoggingMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+    const startTime = Date.now();
+    
+    // Log request
+    this.logger.info('Incoming request', {
+      requestId: (req as any).requestId,
+      method: req.method,
+      path: req.path,
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      tenantId: req.headers['x-tenant-id'],
+      timestamp: new Date().toISOString()
+    });
+
+    // Log response
+    res.on('finish', () => {
+      const duration = Date.now() - startTime;
+      this.logger.info('Request completed', {
+        requestId: (req as any).requestId,
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode,
+        duration: `${duration}ms`,
+        ip: req.ip,
+        tenantId: req.headers['x-tenant-id']
+      });
+    });
+
+    next();
+  };
+
+  private inputValidationMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+    // Check for suspicious patterns
+    const suspiciousPatterns = [
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      /javascript:/gi,
+      /on\w+\s*=/gi,
+      /union\s+select/gi,
+      /drop\s+table/gi,
+      /insert\s+into/gi,
+      /delete\s+from/gi,
+      /update\s+set/gi,
+      /exec\s*\(/gi,
+      /eval\s*\(/gi,
+      /\.\.\/\.\./g,
+      /\.\.\\\.\./g
+    ];
+
+    const requestBody = JSON.stringify(req.body).toLowerCase();
+    const requestQuery = JSON.stringify(req.query).toLowerCase();
+    const requestParams = JSON.stringify(req.params).toLowerCase();
+    const requestHeaders = JSON.stringify(req.headers).toLowerCase();
+
+    const allRequestData = `${requestBody} ${requestQuery} ${requestParams} ${requestHeaders}`;
+
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(allRequestData)) {
+        this.logger.warn('Suspicious request detected', {
+          requestId: (req as any).requestId,
+          pattern: pattern.source,
+          ip: req.ip,
+          path: req.path,
+          userAgent: req.get('User-Agent')
+        });
+
+        return res.status(400).json({
+          error: 'Invalid request',
+          message: 'Request contains suspicious content'
+        });
+      }
+    }
+
+    next();
+  };
+
+  private generateRequestId(): string {
+    return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
   private authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      this.logger.warn('Authentication failed - missing token', {
+        requestId: (req as any).requestId,
+        ip: req.ip,
+        path: req.path
+      });
+      
       res.status(401).json({
         error: 'Authentication required',
         message: 'Bearer token is required'
@@ -149,14 +331,22 @@ export class SimpleApiGateway {
       };
 
       this.logger.info('Authentication successful', {
+        requestId: (req as any).requestId,
         userId: decoded.userId,
         tenantId: decoded.tenantId,
+        role: decoded.role,
         path: req.path
       });
 
       next();
     } catch (error) {
-      this.logger.warn('JWT verification failed', { error });
+      this.logger.warn('JWT verification failed', { 
+        requestId: (req as any).requestId,
+        error: error.message,
+        ip: req.ip,
+        path: req.path
+      });
+      
       res.status(401).json({
         error: 'Invalid token',
         message: 'JWT token is invalid or malformed'
