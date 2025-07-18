@@ -6,10 +6,11 @@ import {
 import { AmazonConnector } from './connectors/amazon-connector';
 import { AmazonRealConnector } from './connectors/amazon-real-connector';
 import { WalmartConnector } from './connectors/walmart-connector';
+import { WalmartRealConnector } from './connectors/walmart-real-connector';
 import { EbayConnector } from './connectors/ebay-connector';
 import { EbayRealConnector } from './connectors/ebay-real-connector';
 
-export type MarketplaceType = 'amazon' | 'amazon-real' | 'walmart' | 'ebay' | 'ebay-real';
+export type MarketplaceType = 'amazon' | 'amazon-real' | 'walmart' | 'walmart-real' | 'ebay' | 'ebay-real';
 
 export class MarketplaceConnectorFactory {
   private static logger: any;
@@ -37,6 +38,9 @@ export class MarketplaceConnectorFactory {
       case 'walmart':
         return new WalmartConnector(credentials, settings, MarketplaceConnectorFactory.logger);
       
+      case 'walmart-real':
+        return new WalmartRealConnector(credentials, settings, MarketplaceConnectorFactory.logger);
+      
       case 'ebay':
         return new EbayConnector(credentials, settings, MarketplaceConnectorFactory.logger);
       
@@ -49,7 +53,7 @@ export class MarketplaceConnectorFactory {
   }
 
   static getSupportedMarketplaces(): MarketplaceType[] {
-    return ['amazon', 'amazon-real', 'walmart', 'ebay', 'ebay-real'];
+    return ['amazon', 'amazon-real', 'walmart', 'walmart-real', 'ebay', 'ebay-real'];
   }
 
   static getMarketplaceInfo(type: MarketplaceType): {
@@ -80,11 +84,20 @@ export class MarketplaceConnectorFactory {
       
       case 'walmart':
         return {
-          name: 'Walmart Marketplace',
-          description: 'Walmart marketplace integration for sellers',
+          name: 'Walmart Marketplace (Mock)',
+          description: 'Walmart marketplace integration for sellers (mock data)',
           requiredCredentials: ['apiKey', 'apiSecret'],
           features: ['inventory', 'pricing', 'orders', 'listings'],
           rateLimits: { requestsPerSecond: 1, requestsPerHour: 3600 }
+        };
+      
+      case 'walmart-real':
+        return {
+          name: 'Walmart Marketplace (Real API)',
+          description: 'Real Walmart marketplace integration with actual API calls',
+          requiredCredentials: ['apiKey', 'apiSecret', 'marketplaceId'],
+          features: ['inventory', 'pricing', 'orders', 'listings', 'webhooks'],
+          rateLimits: { requestsPerSecond: 20, requestsPerHour: 1000 }
         };
       
       case 'ebay':

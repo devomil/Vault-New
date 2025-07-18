@@ -1,7 +1,21 @@
-import { 
-  Vendor, 
-  VendorCredentials 
-} from '../../../shared/types/src';
+import { VendorCredentials } from './vendor-types';
+
+// Extended vendor interface for this service
+export interface Vendor {
+  id?: string;
+  tenantId?: string;
+  vendorId?: string;
+  name: string;
+  type: string;
+  description?: string;
+  status: 'active' | 'inactive' | 'suspended';
+  website?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export interface VendorProductData {
   sku: string;
