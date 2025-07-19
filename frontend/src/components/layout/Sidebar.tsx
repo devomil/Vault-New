@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { X, Building2, BarChart3, Package, ShoppingCart, Warehouse, DollarSign, TrendingUp, Store, Truck, Settings, User, Activity, Shield } from 'lucide-react';
+import { X, Building2, BarChart3, Package, ShoppingCart, Warehouse, DollarSign, TrendingUp, Store, Truck, Settings, User, Activity, Shield, TestTube } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface SidebarProps {
@@ -17,6 +17,7 @@ const navigation = [
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Marketplace', href: '/marketplace', icon: Store },
   { name: 'Vendors', href: '/vendors', icon: Truck },
+  { name: 'Integration Test', href: '/integration-test', icon: TestTube },
   { name: 'Performance', href: '/performance', icon: Activity },
   { name: 'Security', href: '/security', icon: Shield },
   { name: 'Settings', href: '/settings', icon: Settings },

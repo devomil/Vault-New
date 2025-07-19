@@ -20,10 +20,15 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
+      '/api/v1/marketplaces': {
+        target: 'http://localhost:3002',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api/v1')
+        rewrite: (path) => path.replace(/^\/api\/v1\/marketplaces/, '/api/v1/marketplaces')
+      },
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   },

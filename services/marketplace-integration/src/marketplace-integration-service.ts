@@ -72,6 +72,7 @@ export class MarketplaceIntegrationService extends ServiceTemplate {
     this.app.put('/api/v1/marketplaces/:id', (req, res) => this.updateMarketplace(req, res));
     this.app.delete('/api/v1/marketplaces/:id', (req, res) => this.deleteMarketplace(req, res));
     this.app.post('/api/v1/marketplaces/:id/test', (req, res) => this.testMarketplaceConnection(req, res));
+    this.app.post('/api/v1/marketplaces/test-sp-api', (req, res) => this.testSPAPIConnection(req, res));
 
     // Product listings
     this.app.get('/api/v1/listings', (req, res) => this.getListings(req, res));
@@ -116,9 +117,66 @@ export class MarketplaceIntegrationService extends ServiceTemplate {
       'POST /api/v1/sync/pricing',
       'POST /api/v1/sync/listings',
       'POST /api/v1/sync/orders',
-      'GET /api/v1/marketplaces/supported'
+      'GET /api/v1/marketplaces/supported',
+      'POST /api/v1/marketplaces/test-sp-api'
     ];
   }
+
+  // SP-API Test Connection Method
+  private testSPAPIConnection = async (req: Request, res: Response): Promise<void> => {
+    try {
+      if (!req.tenantContext) {
+        res.status(401).json({ error: 'Tenant context required' });
+        return;
+      }
+
+      const { clientId, clientSecret, refreshToken, marketplaceId, sellerId, region = 'us-east-1', environment = 'sandbox' } = req.body;
+
+      if (!clientId || !clientSecret || !refreshToken || !marketplaceId || !sellerId) {
+        res.status(400).json({ 
+          error: 'Missing required credentials',
+          required: ['clientId', 'clientSecret', 'refreshToken', 'marketplaceId', 'sellerId']
+        });
+        return;
+      }
+
+      // Create SP-API credentials
+      const credentials = {
+        clientId,
+        clientSecret,
+        refreshToken,
+        marketplaceId,
+        sellerId,
+        region,
+        environment
+      };
+
+      const settings: MarketplaceSettings = {};
+      const connector = MarketplaceConnectorFactory.createConnector(
+        'amazon-sp-api' as MarketplaceType,
+        credentials as any,
+        settings
+      );
+
+      // Test the connection
+      const testResult = await (connector as any).testConnection();
+
+      res.json({
+        success: testResult.success,
+        data: {
+          ...testResult.details,
+          duration: testResult.duration,
+          timestamp: new Date()
+        }
+      });
+    } catch (error) {
+      this.logger.error('Error testing SP-API connection', { error });
+      res.status(500).json({ 
+        error: 'Failed to test SP-API connection',
+        details: error.response?.data?.errors?.[0]?.message || error.message || 'Unknown error'
+      });
+    }
+  };
 
   // Marketplace Management Methods
   private getMarketplaces = async (req: Request, res: Response): Promise<void> => {
@@ -291,7 +349,9 @@ export class MarketplaceIntegrationService extends ServiceTemplate {
         apiKey: marketplace.apiKey || undefined,
         apiSecret: marketplace.apiSecret || undefined,
         accessToken: marketplace.accessToken || undefined,
-        refreshToken: marketplace.refreshToken || undefined
+        refreshToken: marketplace.refreshToken || undefined,
+        // Add SP-API specific fields from settings
+        ...(marketplace.settings as any)
       };
 
       const settings: MarketplaceSettings = marketplace.settings as MarketplaceSettings || {};
@@ -301,20 +361,36 @@ export class MarketplaceIntegrationService extends ServiceTemplate {
         settings
       );
 
-      const isAuthenticated = await connector.authenticate();
-      const marketplaceInfo = await connector.getMarketplaceInfo();
+      // Use the testConnection method if available, otherwise fall back to authenticate
+      if ('testConnection' in connector && typeof connector.testConnection === 'function') {
+        const testResult = await (connector as any).testConnection();
+        res.json({
+          success: testResult.success,
+          data: {
+            ...testResult.details,
+            duration: testResult.duration,
+            timestamp: new Date()
+          }
+        });
+      } else {
+        const isAuthenticated = await connector.authenticate();
+        const marketplaceInfo = await connector.getMarketplaceInfo();
 
-      res.json({
-        success: isAuthenticated,
-        data: {
-          authenticated: isAuthenticated,
-          marketplaceInfo,
-          timestamp: new Date()
-        }
-      });
+        res.json({
+          success: isAuthenticated,
+          data: {
+            authenticated: isAuthenticated,
+            marketplaceInfo,
+            timestamp: new Date()
+          }
+        });
+      }
     } catch (error) {
       this.logger.error('Error testing marketplace connection', { error });
-      res.status(500).json({ error: 'Failed to test marketplace connection' });
+      res.status(500).json({ 
+        error: 'Failed to test marketplace connection',
+        details: error.response?.data?.errors?.[0]?.message || error.message || 'Unknown error'
+      });
     }
   };
 

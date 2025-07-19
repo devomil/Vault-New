@@ -13,6 +13,7 @@ import VendorsPage from './pages/vendors/VendorsPage';
 import OrdersPage from './pages/orders/OrdersPage';
 import PerformancePage from './pages/performance';
 import SecurityPage from './pages/security';
+import IntegrationTestPage from './pages/integrations/IntegrationTestPage';
 
 // Simple test component
 function TestPage() {
@@ -192,6 +193,7 @@ function App() {
               <Route path="orders" element={<OrdersPage />} />
               <Route path="performance" element={<PerformancePage />} />
               <Route path="security" element={<SecurityPage />} />
+              <Route path="integration-test" element={<IntegrationTestPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

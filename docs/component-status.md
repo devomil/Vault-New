@@ -28,7 +28,7 @@ This document tracks the status of all UI components in the Vault Modernization 
 | Inventory Link | 📋 Planned | Route exists, page needs implementation | Current |
 | Pricing Link | 📋 Planned | Route exists, page needs implementation | Current |
 | Analytics Link | 📋 Planned | Route exists, page needs implementation | Current |
-| Marketplace Link | 📋 Planned | Route exists, page needs implementation | Current |
+| Marketplace Link | ✅ Working | Amazon SP-API OAuth 2.0 integration working | Current |
 | Vendors Link | 📋 Planned | Route exists, page needs implementation | Current |
 | Settings Link | 📋 Planned | Route exists, page needs implementation | Current |
 | Profile Link | 📋 Planned | Route exists, page needs implementation | Current |
@@ -113,6 +113,9 @@ This document tracks the status of all UI components in the Vault Modernization 
 2. **Layout structure problems** - Fixed with correct CSS classes
 3. **Header positioning** - Fixed with compact design
 4. **Import casing issues** - Fixed with correct file paths
+5. **Amazon SP-API timeout issues** - Fixed with 60-second timeout and proper proxy routing
+6. **OAuth 2.0 authentication failures** - Fixed with proper URL-encoded form data
+7. **Frontend proxy routing** - Fixed with direct routing to marketplace service
 
 ### Current Issues ⚠️
 1. **Mobile responsiveness** - Needs comprehensive testing

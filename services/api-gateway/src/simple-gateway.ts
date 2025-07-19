@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { createLogger, format, transports } from 'winston';
 import helmet from 'helmet';
 import cors from 'cors';
+import integrationTestRoutes from './integration-test-routes';
 
 // Security configuration
 const SECURITY_CONFIG = {
@@ -26,7 +27,7 @@ const SECURITY_CONFIG = {
   },
   // CORS configuration
   cors: {
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000', 'https://your-domain.com'],
+    origin: process.env['ALLOWED_ORIGINS']?.split(',') || ['http://localhost:3000', 'https://your-domain.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id', 'x-api-key'],
     exposedHeaders: ['x-tenant-id', 'x-request-id'],
@@ -171,8 +172,32 @@ export class SimpleApiGateway {
     // Input validation
     this.app.use(this.inputValidationMiddleware);
     
+    // Increase limits to handle large requests
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+    
+    // CORS and header configuration
+    this.app.use((req, res, next) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-tenant-id, x-api-key');
+      res.setHeader('Access-Control-Max-Age', '86400');
+      
+      // Handle preflight requests
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+        return;
+      }
+      
+      next();
+    });
+    
+    // Increase header size limit
+    this.app.use((req, _res, next) => {
+      // Set larger header size limit
+      req.setMaxListeners(0);
+      next();
+    });
     
     // Global rate limiting
     const globalLimiter = rateLimit({
@@ -281,10 +306,11 @@ export class SimpleApiGateway {
           userAgent: req.get('User-Agent')
         });
 
-        return res.status(400).json({
+        res.status(400).json({
           error: 'Invalid request',
           message: 'Request contains suspicious content'
         });
+        return;
       }
     }
 
@@ -402,6 +428,9 @@ export class SimpleApiGateway {
     serviceRoutes.forEach(route => {
       this.setupServiceProxy(route);
     });
+
+    // Integration test routes (no authentication required for testing)
+    this.app.use('/api/integration-test', integrationTestRoutes);
   }
 
   private setupServiceProxy(route: any): void {

@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create axios instance
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-  timeout: 10000,
+  timeout: 60000, // Increase timeout to 60 seconds for SP-API calls
   headers: {
     'Content-Type': 'application/json',
   },
@@ -218,4 +218,24 @@ export const securityAPI = {
   getSecurityAlerts: () => api.get('/api/security/alerts'),
   
   updateSecuritySettings: (data: any) => api.put('/api/security/settings', data),
+};
+
+export const integrationAPI = {
+  testMarketplaceConnection: (marketplaceId: string) =>
+    api.post(`/api/v1/marketplaces/${marketplaceId}/test`),
+  
+  testSPAPIConnection: (credentials: {
+    clientId: string;
+    clientSecret: string;
+    refreshToken: string;
+    marketplaceId: string;
+    sellerId: string;
+    region?: string;
+    environment?: 'sandbox' | 'production';
+  }) => api.post('/api/v1/marketplaces/test-sp-api', credentials),
+  
+  testVendorConnection: (credentials: any) =>
+    api.post('/api/v1/vendors/test-connection', credentials),
+  
+  getSupportedMarketplaces: () => api.get('/api/v1/marketplaces/supported'),
 }; 

@@ -5,12 +5,13 @@ import {
 } from './marketplace-connector';
 import { AmazonConnector } from './connectors/amazon-connector';
 import { AmazonRealConnector } from './connectors/amazon-real-connector';
+import { AmazonSPAPIConnector } from './connectors/amazon-sp-api-connector';
 import { WalmartConnector } from './connectors/walmart-connector';
 import { WalmartRealConnector } from './connectors/walmart-real-connector';
 import { EbayConnector } from './connectors/ebay-connector';
 import { EbayRealConnector } from './connectors/ebay-real-connector';
 
-export type MarketplaceType = 'amazon' | 'amazon-real' | 'walmart' | 'walmart-real' | 'ebay' | 'ebay-real';
+export type MarketplaceType = 'amazon' | 'amazon-real' | 'amazon-sp-api' | 'walmart' | 'walmart-real' | 'ebay' | 'ebay-real';
 
 export class MarketplaceConnectorFactory {
   private static logger: any;
@@ -35,6 +36,9 @@ export class MarketplaceConnectorFactory {
       case 'amazon-real':
         return new AmazonRealConnector(credentials, settings, MarketplaceConnectorFactory.logger);
       
+      case 'amazon-sp-api':
+        return new AmazonSPAPIConnector(credentials as any, settings, MarketplaceConnectorFactory.logger);
+      
       case 'walmart':
         return new WalmartConnector(credentials, settings, MarketplaceConnectorFactory.logger);
       
@@ -53,7 +57,7 @@ export class MarketplaceConnectorFactory {
   }
 
   static getSupportedMarketplaces(): MarketplaceType[] {
-    return ['amazon', 'amazon-real', 'walmart', 'walmart-real', 'ebay', 'ebay-real'];
+    return ['amazon', 'amazon-real', 'amazon-sp-api', 'walmart', 'walmart-real', 'ebay', 'ebay-real'];
   }
 
   static getMarketplaceInfo(type: MarketplaceType): {
@@ -79,6 +83,15 @@ export class MarketplaceConnectorFactory {
           description: 'Amazon marketplace integration with real API calls',
           requiredCredentials: ['clientId', 'clientSecret', 'sellerId', 'marketplaceId'],
           features: ['inventory', 'pricing', 'orders', 'listings', 'reports'],
+          rateLimits: { requestsPerSecond: 2, requestsPerHour: 7200 }
+        };
+      
+      case 'amazon-sp-api':
+        return {
+          name: 'Amazon SP-API',
+          description: 'Amazon Selling Partner API integration with OAuth 2.0 authentication',
+          requiredCredentials: ['clientId', 'clientSecret', 'refreshToken', 'marketplaceId', 'sellerId'],
+          features: ['inventory', 'pricing', 'orders', 'listings', 'reports', 'catalog'],
           rateLimits: { requestsPerSecond: 2, requestsPerHour: 7200 }
         };
       

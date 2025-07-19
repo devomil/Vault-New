@@ -1,163 +1,216 @@
-# Tomorrow's Tasks - Post Phase 5 Completion
+# Tomorrow Tasks - Eco8.co Marketplace Listing System Implementation
 
-## 🎯 **Current Status: Phase 5 Complete - Ready for Next Phase**
+## 🎯 **Priority 1: Database Schema Extensions**
 
-**Phase 5: Integration & UI Development** ✅ **COMPLETE**
-- ✅ Week 17: Core UI Framework & Authentication
-- ✅ Week 18: Dashboard & Core Features  
-- ✅ Week 19: Marketplace & Vendor Integration
-- ✅ Week 20: Advanced Features & Polish
+### Master Product Catalog Tables
+- [ ] Extend `products` table with UPC, MPN, MSRP, MAP fields
+- [ ] Create `vendor_product_mappings` table with listing percentage, markup rules
+- [ ] Create `automation_schedules` table for weekly discovery jobs
+- [ ] Add `listing_percentage` field to existing vendor mappings
 
-## 📋 **Immediate Tasks (Next Session)**
+### User Sourcing Rules Tables
+- [ ] Create `user_sourcing_rules` table for configurable sourcing logic
+- [ ] Create `sourcing_rule_configs` table for rule conditions
+- [ ] Create `vendor_allocation_rules` table for percentage/quantity allocation
+- [ ] Create `product_sourcing_rules` table for product-specific filters
 
-### 1. **Documentation Updates** (Priority: High)
-- [ ] Update `shared/database/README.md` with latest schema changes
-- [ ] Update `shared/database/setup-db.ps1` if needed
-- [ ] Update `package.json` dependencies and scripts
-- [ ] Update `tsconfig.json` configuration
-- [ ] Update `jest.config.js` test configuration
-- [ ] Update `docker-compose.yml` with latest services
-- [ ] Update `shared/types/` with new interfaces
-- [ ] Create `docs/ui-phase5-reference.md` for UI documentation
-- [ ] Create `docs/component-status.md` for component tracking
-- [ ] Create `docs/screenshots/README.md` for UI documentation
-- [ ] Update `.cursorrules` with latest project status
+### Purchasing AI Tables
+- [ ] Create `purchasing_ai_decisions` table for AI recommendations
+- [ ] Create `marketplace_product_analysis` table for seller rank, competition data
+- [ ] Create `purchasing_ai_feedback` table for learning system
+- [ ] Create `purchasing_ai_config` table for user thresholds
 
-### 2. **Phase 6 Planning** (Priority: High)
-- [ ] Create `phase6-checklist.md` for real data integration
-- [ ] Define Phase 6 scope and objectives
-- [ ] Plan real vendor/marketplace data integration
-- [ ] Design enhancement roadmap
+### Automated Listing Tables
+- [ ] Create `vendor_sync_sessions` table for 3x daily sync tracking
+- [ ] Create `automated_listing_jobs` table for weekly discovery jobs
+- [ ] Create `inventory_alerts` table for stockout and pricing alerts
+- [ ] Create `price_protection_rules` table for automated price management
+- [ ] Create `marketplace_monitoring` table for real-time marketplace data
+- [ ] Create `new_product_discovery` table for weekly new product tracking
 
-### 3. **Code Quality & Testing** (Priority: Medium)
-- [ ] Fix remaining TypeScript errors in frontend
-- [ ] Run full test suite to ensure all tests pass
-- [ ] Update component documentation
-- [ ] Review and optimize bundle size
+## 🎯 **Priority 2: Core Engine Implementation**
 
-### 4. **Production Readiness** (Priority: Medium)
-- [ ] Test production build process
-- [ ] Verify all environment variables are documented
-- [ ] Test deployment pipeline
-- [ ] Review security configurations
+### User Sourcing Rules Engine
+- [ ] Implement `UserSourcingRuleEngine` class
+- [ ] Create cost-based sourcing algorithm
+- [ ] Create percentage-based sourcing algorithm
+- [ ] Create inventory limit sourcing algorithm
+- [ ] Create risk distribution sourcing algorithm
+- [ ] Build rule execution priority system
 
-## 🚀 **Phase 6 Options (Choose One)**
+### Purchasing AI Decision Engine
+- [ ] Implement `PurchasingAIDecisionEngine` class
+- [ ] Create market demand calculation (seller rank, sales velocity, competition)
+- [ ] Create profitability analysis (warehouse vs. dropship scenarios)
+- [ ] Create risk assessment algorithms
+- [ ] Build AI recommendation generation system
+- [ ] Implement confidence scoring
 
-### **Option A: Real Data Integration**
-**Focus**: Replace mock data with real vendor/marketplace APIs
-- Real Amazon Seller Central integration
-- Real Ingram Micro API integration
-- Real order processing workflows
-- Real inventory synchronization
-- Real pricing data integration
+### Automated Listing Engine
+- [ ] Implement `VendorSyncEngine` class (3x daily sync)
+- [ ] Implement `MarketplaceMonitor` class (every 2 hours)
+- [ ] Implement `AutomatedListingEngine` class (weekly discovery)
+- [ ] Implement `PriceProtectionEngine` class (every 4 hours)
+- [ ] Implement `InventoryManager` class (stockout prevention)
+- [ ] Implement `NotificationSystem` class (alerts and notifications)
 
-### **Option B: Production Deployment**
-**Focus**: Deploy to production environment
-- Set up production Kubernetes cluster
-- Configure production monitoring
-- Set up CI/CD pipelines
-- Configure production databases
-- Set up backup and disaster recovery
+## 🎯 **Priority 3: Marketplace Integration Extensions**
 
-### **Option C: Advanced Features Enhancement**
-**Focus**: Add advanced business features
-- AI-powered recommendations
-- Advanced analytics and reporting
-- Automated workflows
-- Advanced security features
-- Mobile application development
+### Amazon SP-API Discovery
+- [ ] Extend `AmazonSPAPIConnector` with discovery methods
+- [ ] Implement UPC-based ASIN discovery
+- [ ] Implement MPN-based ASIN matching
+- [ ] Implement title similarity matching
+- [ ] Implement brand verification system
+- [ ] Create confidence scoring for matches
 
-### **Option D: Performance & Scale Optimization**
-**Focus**: Optimize for high-volume usage
-- Load testing and optimization
-- Database performance tuning
-- Caching strategy optimization
-- Microservice scaling
-- Cost optimization
+### Multi-Marketplace Discovery
+- [ ] Implement Walmart item discovery
+- [ ] Implement eBay item discovery
+- [ ] Create cross-marketplace matching system
+- [ ] Build unified discovery result format
+- [ ] Implement marketplace-specific data collection
 
-## 📊 **Current System Status**
+### Real-time Marketplace Monitoring
+- [ ] Implement seller rank tracking
+- [ ] Create sales velocity calculation
+- [ ] Build competition level assessment
+- [ ] Implement price volatility monitoring
+- [ ] Create listing restriction detection
 
-### ✅ **Completed Components**
-- **12 Microservices**: All core and advanced services implemented
-- **Complete UI Application**: React frontend with all features
-- **Database**: 15 tables with tenant isolation
-- **Testing**: 200+ tests with 100% pass rate
-- **Documentation**: Complete setup and API guides
-- **Security**: Authentication, authorization, compliance
-- **Performance**: Caching, monitoring, optimization
-- **Production Ready**: Kubernetes, monitoring, CI/CD
+## 🎯 **Priority 4: Vendor Integration Extensions**
 
-### 🎯 **Ready for Enhancement**
-- Real data integration capabilities
-- Production deployment readiness
-- Advanced feature development
-- Performance optimization
-- Mobile application development
+### Vendor Overlap Management
+- [ ] Implement `ProductMatchingEngine` for overlapping products
+- [ ] Create multi-factor vendor scoring system
+- [ ] Build intelligent sourcing engine
+- [ ] Implement vendor performance tracking
+- [ ] Create vendor priority management
 
-## 🔧 **Technical Debt & Improvements**
+### Real-time Vendor Sync
+- [ ] Implement 3x daily vendor sync scheduler
+- [ ] Create inventory update processing
+- [ ] Build pricing update processing
+- [ ] Implement catalog sync system
+- [ ] Create sync status monitoring
 
-### **Frontend**
-- [ ] Fix TypeScript compilation errors
-- [ ] Optimize bundle size and loading
-- [ ] Improve error handling
-- [ ] Add comprehensive unit tests
-- [ ] Implement proper loading states
+## 🎯 **Priority 5: UI Development**
 
-### **Backend**
-- [ ] Add comprehensive API documentation
-- [ ] Implement rate limiting
-- [ ] Add request validation middleware
-- [ ] Improve error logging
-- [ ] Add performance monitoring
+### User Sourcing Rules Interface
+- [ ] Create `SourcingRuleBuilder` React component
+- [ ] Build vendor allocation configuration UI
+- [ ] Create product filter interface
+- [ ] Implement rule testing dashboard
+- [ ] Build rule management system
 
-### **Infrastructure**
-- [ ] Set up automated backups
-- [ ] Configure monitoring alerts
-- [ ] Implement disaster recovery
-- [ ] Optimize resource usage
-- [ ] Set up cost monitoring
+### Purchasing AI Dashboard
+- [ ] Create `PurchasingAIDashboard` React component
+- [ ] Build AI configuration interface
+- [ ] Create recommendation display system
+- [ ] Implement AI performance tracking
+- [ ] Build feedback collection system
 
-## 📈 **Success Metrics**
+### Automation Configuration Interface
+- [ ] Create `AutomationConfigPage` React component
+- [ ] Build vendor sync configuration
+- [ ] Create marketplace monitoring settings
+- [ ] Implement automated listing controls
+- [ ] Build price protection configuration
 
-### **Phase 5 Achievements**
-- ✅ Complete working UI application
-- ✅ All services integrated and functional
-- ✅ Multi-tenant support working
-- ✅ Real-time data updates
-- ✅ Mobile-responsive design
-- ✅ Accessibility compliance
-- ✅ Performance optimization
-- ✅ User-friendly interface
+### Automation Dashboard
+- [ ] Create `AutomationDashboard` React component
+- [ ] Build sync status display
+- [ ] Create alert management interface
+- [ ] Implement job history tracking
+- [ ] Build notification settings
 
-### **Next Phase Goals**
-- Real data integration (if Option A)
-- Production deployment (if Option B)
-- Advanced features (if Option C)
-- Performance optimization (if Option D)
+## 🎯 **Priority 6: Integration & Testing**
 
-## 🎯 **Recommendation**
+### System Integration
+- [ ] Integrate sourcing rules with vendor overlap management
+- [ ] Connect purchasing AI with marketplace discovery
+- [ ] Link automated listing with user sourcing rules
+- [ ] Integrate price protection with marketplace monitoring
+- [ ] Connect notification system with all engines
 
-**Recommended Next Step**: **Phase 6A - Real Data Integration**
+### API Endpoints
+- [ ] Create `/api/v1/sourcing-rules` endpoints
+- [ ] Create `/api/v1/purchasing-ai` endpoints
+- [ ] Create `/api/v1/automated-listing` endpoints
+- [ ] Create `/api/v1/vendor-sync` endpoints
+- [ ] Create `/api/v1/marketplace-monitoring` endpoints
 
-**Rationale**:
-1. Foundation is solid and production-ready
-2. Real data will provide immediate business value
-3. Can test with real vendor/marketplace APIs
-4. Will validate the system architecture
-5. Provides clear path to production deployment
+### Testing
+- [ ] Write unit tests for all engine classes
+- [ ] Create integration tests for API endpoints
+- [ ] Build end-to-end tests for complete workflows
+- [ ] Implement performance testing for automation
+- [ ] Create user acceptance tests for UI components
 
-**Timeline**: 4-6 weeks for complete real data integration
+## 🎯 **Priority 7: Documentation & Deployment**
 
-## 📝 **Notes for Next Session**
+### Documentation
+- [ ] Update API documentation with new endpoints
+- [ ] Create user guides for sourcing rules configuration
+- [ ] Write AI system user manual
+- [ ] Document automation configuration
+- [ ] Create troubleshooting guides
 
-1. **Start with documentation updates** to ensure everything is current
-2. **Choose Phase 6 direction** based on business priorities
-3. **Fix any remaining technical issues** before proceeding
-4. **Set up proper development environment** for next phase
-5. **Plan integration approach** for real vendor/marketplace data
+### Deployment
+- [ ] Update Docker configurations for new services
+- [ ] Create Kubernetes manifests for automation services
+- [ ] Set up monitoring for automation jobs
+- [ ] Configure alerting for critical issues
+- [ ] Create backup strategies for new data
+
+## 📊 **Implementation Timeline**
+
+### Week 1: Foundation
+- Database schema extensions
+- Core engine classes (basic structure)
+- Basic API endpoints
+
+### Week 2: Core Logic
+- User sourcing rules engine
+- Purchasing AI decision engine
+- Basic marketplace discovery
+
+### Week 3: Automation
+- Vendor sync engine
+- Marketplace monitoring
+- Automated listing engine
+
+### Week 4: UI & Integration
+- React components
+- System integration
+- Testing and documentation
+
+## 🎯 **Success Criteria**
+
+### Functional Requirements
+- [ ] Users can configure sourcing rules with inventory limits
+- [ ] AI provides warehouse vs. dropship recommendations
+- [ ] System automatically syncs vendors 3x daily
+- [ ] Marketplace monitoring prevents stockouts
+- [ ] Weekly new product discovery works
+- [ ] Price protection prevents violations
+
+### Performance Requirements
+- [ ] Vendor sync completes within 5 minutes
+- [ ] Marketplace monitoring runs every 2 hours
+- [ ] AI recommendations generated within 30 seconds
+- [ ] UI responds within 2 seconds
+- [ ] System handles 100K+ products
+
+### Business Requirements
+- [ ] 80% reduction in stockouts
+- [ ] 75% reduction in pricing issues
+- [ ] 94% time savings on new product discovery
+- [ ] 96% time savings on vendor updates
+- [ ] User satisfaction with automation features
 
 ---
 
-**Last Updated**: 2025-07-14  
-**Next Review**: Next development session  
-**Status**: Ready for Phase 6 planning and execution 
+**Last Updated**: 2025-07-18  
+**Status**: Ready for Implementation  
+**Priority**: High - Eco8.co System Launch 

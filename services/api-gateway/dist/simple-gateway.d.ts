@@ -5,6 +5,10 @@ export declare class SimpleApiGateway {
     constructor(port?: number);
     private setupLogger;
     private setupMiddleware;
+    private securityHeadersMiddleware;
+    private requestLoggingMiddleware;
+    private inputValidationMiddleware;
+    private generateRequestId;
     private authMiddleware;
     private setupRoutes;
     private setupServiceProxy;
